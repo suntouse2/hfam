@@ -1,0 +1,46 @@
+{
+	"name": "@hfam/telegram-bot",
+	"version": "1.0.0",
+	"description": "bot and nodeJS app for payments ",
+	"type": "module",
+	"prisma": {
+		"seed": "tsx prisma/seed.ts"
+	},
+	"scripts": {
+		"dev": "tsx watch src/index.ts",
+		"prebuild": "rimraf dist && tsc --noEmit",
+		"build": "swc src -d dist --strip-leading-paths --config-file=swc.build.json",
+		"start": "node dist/index.js",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [],
+	"author": "Murad",
+	"license": "ISC",
+	"dependencies": {
+		"@grammyjs/auto-retry": "^2.0.2",
+		"@grammyjs/conversations": "^2.1.0",
+		"@grammyjs/menu": "^1.3.1",
+		"@grammyjs/parse-mode": "^2.2.0",
+		"@grammyjs/transformer-throttler": "^1.2.1",
+		"@hfam/shared": "1.0.0",
+		"@prisma/client": "^6.15.0",
+		"chalk": "^5.6.0",
+		"date-fns": "^4.1.0",
+		"dotenv": "^17.2.1",
+		"got": "^14.4.8",
+		"grammy": "^1.38.1",
+		"remeda": "^2.30.0",
+		"tldts": "^7.0.12",
+		"tsx": "^4.20.5",
+		"zod": "^4.1.5"
+	},
+	"devDependencies": {
+		"@grammyjs/types": "^3.22.1",
+		"@swc/cli": "^0.7.8",
+		"@swc/core": "^1.13.5",
+		"@types/node": "^24.3.0",
+		"prisma": "^6.15.0",
+		"rimraf": "^6.0.1",
+		"typescript": "^5.9.2"
+	}
+}

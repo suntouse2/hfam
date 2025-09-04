@@ -1,0 +1,43 @@
+{
+	"name": "@hfam/shared",
+	"version": "1.0.0",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		},
+		"./validation/*": {
+			"import": "./dist/validation/*.js",
+			"require": "./dist/validation/*.cjs",
+			"types": "./dist/validation/*.d.ts"
+		},
+		"./helpers/*": {
+			"import": "./dist/helpers/*.js",
+			"require": "./dist/helpers/*.cjs",
+			"types": "./dist/helpers/*.d.ts"
+		},
+		"./utils/*": {
+			"import": "./dist/utils/*.js",
+			"require": "./dist/utils/*.cjs",
+			"types": "./dist/utils/*.d.ts"
+		},
+		"./dto/*": {
+			"import": "./dist/dto/*.js",
+			"require": "./dist/dto/*.cjs",
+			"types": "./dist/dto/*.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.json"
+	},
+	"dependencies": {
+		"zod": "^4.1.5"
+	}
+}

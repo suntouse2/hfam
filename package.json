@@ -1,0 +1,7 @@
+{
+	"name": "hfam",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	]
+}
