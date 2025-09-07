@@ -10,54 +10,72 @@ datasource db {
 model Project {
   id         Int         @id @default(autoincrement())
   name       String
-  domains    String[]    @default([])
+  domains    Domain[]
   payments   Payment[]
   connectors Connector[]
+  methods    Method[]
 
   @@map("projects")
 }
 
-model Provider {
-  id         Int         @id @default(autoincrement())
-  key        String      @unique
-  title      String
-  schema     Json
-  methods    String[]
-  payments   Payment[]
-  connectors Connector[]
+model Method {
+  id          Int        @id @default(autoincrement())
+  label       String
+  imageSrc    String
+  active      Boolean    @default(false)
+  method      String?
+  byProvider  String?
+  connector   Connector? @relation(fields: [connectorId], references: [id], onDelete: SetNull)
+  connectorId Int?
+  project     Project    @relation(fields: [projectId], references: [id])
+  projectId   Int
+  minAmount   Int?
+  maxAmount   Int?
 
-  @@map("providers")
+  @@map("methods")
+}
+
+model Domain {
+  id        Int     @id @default(autoincrement())
+  value     String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int
+
+  @@map("domains")
 }
 
 model Connector {
-  id         Int     @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   projectId  Int
-  providerId Int
-  name       String  @default("")
+  name       String   @default("")
   schema     Json
   settings   Json?
-  active     Boolean @default(false)
-
-  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  provider Provider @relation(fields: [providerId], references: [id])
+  active     Boolean  @default(false)
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  byProvider String
+  bIndex     Int      @default(0)
+  methods    Method[]
 
   @@map("connectors")
 }
 
 model Payment {
-  id         String        @id @default(uuid())
-  status     PaymentStatus @default(CREATED)
-  amount     Int
-  paymentId  String?       @unique
-  paymentUrl String?
-  paymentQr  String?
-  project    Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId  Int
-  provider   Provider      @relation(fields: [providerId], references: [id])
-  providerId Int
-  method     String?
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  id          String        @id @default(uuid())
+  orderId     String
+  status      PaymentStatus @default(CREATED)
+  amount      Int
+  description String        @default("")
+  hookWait    Boolean       @default(false)
+  payload     Json?
+  paymentId   String?       @unique
+  paymentUrl  String?
+  paymentQr   String?
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   Int
+  connector   Json
+  method      String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@map("payments")
 }

@@ -1,7 +1,9 @@
 import type { Request, Response, NextFunction } from 'express'
-import { ZodError } from 'zod'
+import { json, ZodError } from 'zod'
 import { Prisma } from '@prisma/client'
 import { ErrorAPI } from '@hfam/shared/helpers/error'
+import { HTTPError } from 'got'
+import { gfs } from '@hfam/shared/utils/gfs'
 
 export function error(err: unknown, _req: Request, res: Response, _next: NextFunction) {
 	if (err instanceof ErrorAPI) {
@@ -9,11 +11,20 @@ export function error(err: unknown, _req: Request, res: Response, _next: NextFun
 	}
 	if (err instanceof ZodError) {
 		console.log(err.issues)
+		const stack = gfs(err)
+		console.log(stack?.join('\n') ?? err.stack)
+
 		return res.status(400).json({ error: 'validation error' })
 	}
 
 	if (err instanceof Prisma.PrismaClientKnownRequestError) {
 		return res.status(400).json({ error: 'Invalid database request' })
+	}
+
+	if (err instanceof HTTPError) {
+		console.log(JSON.parse(err.response?.body))
+
+		return res.status(400).json({ error: 'got request error' })
 	}
 	console.log(err)
 

@@ -1,7 +1,8 @@
 import { InlineKeyboard } from 'grammy'
 import type { MyContext, MyConversation, MyConversationContext } from '../bot'
 import { projectsApi } from '@/api/projectsApi'
-import { viewProjectDomains } from '@/views/ProjectDomains'
+import { viewDomainsList } from '@/views/DomainsList'
+import { domainsApi } from '@/api/domainsApi'
 
 export async function addDomain(
 	conversation: MyConversation,
@@ -9,8 +10,8 @@ export async function addDomain(
 ) {
 	const session = await conversation.external(ctx => ctx.session)
 	const { projectId } = session
-	if (!projectId) return
-	const project = await conversation.external(() => projectsApi.getProject(projectId))
+
+	if (projectId === null) return
 
 	const sent = await ctx.reply('✏️ Введите название домена:', {
 		reply_markup: new InlineKeyboard().text('⬅️ Назад', 'noop'),
@@ -23,14 +24,12 @@ export async function addDomain(
 
 	if (response.has('message:text')) {
 		await response.deleteMessage()
-		await conversation.external(() =>
-			projectsApi.updateProject(projectId, {
-				domains: [...project.domains, response.message.text],
-			})
-		)
-		const { message, kb } = await conversation.external(() =>
-			viewProjectDomains(projectId)
-		)
+
+		await conversation.external(async () => {
+			await domainsApi.createDomain({ projectId, value: response.message.text })
+		})
+
+		const { message, kb } = await conversation.external(() => viewDomainsList(projectId))
 		await ctx.editMessageText(message, { reply_markup: kb, parse_mode: 'HTML' })
 	}
 

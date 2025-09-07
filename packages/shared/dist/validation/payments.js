@@ -1,0 +1,34 @@
+import z from 'zod';
+export const paymentCreateSchema = z.object({
+    orderId: z.string().nonempty(),
+    projectId: z.coerce.number().nonnegative(),
+    connector: z
+        .object({
+        project: z.object({
+            name: z.string().trim(),
+            id: z.number().nonnegative(),
+        }),
+        byProvider: z.string().trim().max(64),
+        name: z.string().trim().max(64),
+    })
+        .strip(),
+    amount: z.number().positive(),
+    paymentId: z.string().optional(),
+    paymentUrl: z.string().optional(),
+    paymentQr: z.string().optional(),
+    method: z.string().optional(),
+    description: z.string().nonempty().optional(),
+    payload: z
+        .record(z
+        .string()
+        .max(64)
+        .regex(/^[a-z0-9_]+$/), z.string())
+        .optional(),
+});
+export const paymentUpdateSchema = z.object({
+    status: z.enum(['CREATED', 'PAID', 'REFUND']).optional(),
+    paymentId: z.string().optional(),
+    paymentUrl: z.string().optional(),
+    paymentQr: z.string().optional(),
+    method: z.string().optional(),
+});

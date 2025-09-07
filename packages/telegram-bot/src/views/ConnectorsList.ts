@@ -1,31 +1,35 @@
+import { connectorsApi } from '@/api/connectorsApi'
+import { projectsApi } from '@/api/projectsApi'
+import type { ProjectDTO } from '@hfam/shared/dto/index'
+import { connectorSchemaSchema } from '@hfam/shared/validation/connectors'
 import { InlineKeyboard } from 'grammy'
-import type { Project } from '@prisma/client'
-import { projectsService } from '@/services/projectsService'
-import { connectorService } from '@/services/connectorsService'
 
-export async function renderConnectorsList(projectId: Project['id']) {
-	const project = await projectsService.getProject(projectId)
-	if (!project) return { message: '💀 Такого проекта нет.', kb: new InlineKeyboard() }
-
-	const connectors = await connectorService.findConnectors({ projectId: project.id })
+export async function viewConnectorsList(projectId: ProjectDTO['id'] | null) {
+	const connectors = await connectorsApi.getConnectors({
+		projectId: projectId ?? undefined,
+	})
+	let project
+	if (projectId) project = await projectsApi.getProject(projectId)
 
 	const lines = [
-		`📁 <b>${project.name}</b> (ID: ${project.id})`,
+		project && `📁 <b>${project.name}</b> (ID: ${project.id})`,
 		``,
-		`🌐 Подключенные провайдеры для проекта:`,
+		`🌐 Подключенные провайдеры:`,
 	]
 
 	const kb = new InlineKeyboard()
 	connectors.forEach(c => {
 		const state = c.active ? '🟢 Включен' : '⭕ Выключен'
-		const label = c.credentials.some(c => !c.value)
-			? `${c.name} ┃ ${c.provider.title} (ID: ${c.id}) ┃ ⚙️ Не настроен`
-			: `${c.name} ┃ ${c.provider.title} (ID: ${c.id}) ┃  ${state}`
+		const scheme = connectorSchemaSchema.parse(c.schema)
+		const notConfigured = Object.values(scheme).some(s => !s.value)
+		const label = notConfigured
+			? `${c.name}  (ID: ${c.id}) ┃ ⚙️ Не настроен`
+			: `${c.name}  (ID: ${c.id}) ┃ ${state}`
 
-		kb.text(label, `connector_${c.id}`).row()
+		kb.text(label, `connector:id-${c.id}`).row()
 	})
-	kb.text('➕ Подключить провайдер ', `providers_${projectId}`).row(),
-		kb.text('⬅️ Назад', `projects_${projectId}`)
+	kb.text('➕ Подключить провайдер ', `providers`).row(),
+		kb.text('⬅️ Назад', project ? `project:id-${projectId}` : `projects`)
 
 	return { message: lines.join('\n'), kb }
 }

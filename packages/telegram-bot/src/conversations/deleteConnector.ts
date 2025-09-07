@@ -1,48 +1,54 @@
 import { InlineKeyboard } from 'grammy'
 import type { MyConversation, MyConversationContext } from '../bot'
-import { connectorService } from '@/services/connectorsService'
-import { renderConnectorsList } from '../views/ConnectorsList'
+import { connectorsApi } from '@/api/connectorsApi'
+import { providersApi } from '@/api/providersApi'
+import { viewConnectorsList } from '@/views/ConnectorsList'
+import { viewConnector } from '@/views/Connector'
 
 export async function deleteConnector(
 	conversation: MyConversation,
 	ctx: MyConversationContext
 ) {
-	const [, connectorId = NaN] = ctx.callbackQuery?.data?.split('_').map(Number) ?? []
-	if (Number.isNaN(connectorId)) return
+	const session = await conversation.external(ctx => ctx.session)
+	const { connectorId } = session
+	if (connectorId == null) return
 
-	const connector = await connectorService.getConnector(connectorId)
-	if (!connector) return
+	const connector = await connectorsApi.getConnector(connectorId)
+	const provider = await providersApi.getProvider(connector.byProvider)
 
-	const fullName = `${connector.name} | ${connector.provider.title} (ID: ${connector.id})`
+	const fullName = `${connector.name} | ${provider.title} (ID: ${connector.id})`
 
-	const kb = new InlineKeyboard()
-	kb.text('🗑️ Удалить', `confirm_deleteConnector_${connector.id}`)
-	kb.text('⬅️ Назад', 'back')
-
-	const message = `Вы уверены, что хотите удалить провайдер <b>${fullName}</b>?`
-
-	const sent = await ctx.reply(message, { reply_markup: kb, parse_mode: 'HTML' })
-
-	const responseCtx = await conversation.waitFor('callback_query')
-	await ctx.api.deleteMessage(sent.chat.id, sent.message_id)
-	await responseCtx.answerCallbackQuery()
-
-	const responseData = responseCtx.callbackQuery?.data
-
-	if (responseData && responseData.startsWith('confirm_deleteConnector_')) {
-		try {
-			await connectorService.deleteConnector(connector.id)
-		} catch (error: any) {
-			const message =
-				error?.message || '💀 Не получилось удалить провайдер. Свяжитесь с 	мурадиком'
-			await ctx.reply(message)
-			console.error(error)
-		} finally {
-			const { message, kb } = await renderConnectorsList(connector.project.id)
-			ctx.deleteMessage()
-			await ctx.reply(message, { reply_markup: kb, parse_mode: 'HTML' })
+	const sent = await ctx.reply(
+		`Вы уверены, что хотите удалить провайдер <b>${fullName}</b>?`,
+		{
+			reply_markup: new InlineKeyboard()
+				.text('🗑️ Удалить', `confirm`)
+				.text('⬅️ Назад', 'cancel'),
+			parse_mode: 'HTML',
 		}
+	)
+
+	const response = await conversation.waitFor('callback_query')
+	await ctx.api.deleteMessage(sent.chat.id, sent.message_id)
+	await response.answerCallbackQuery()
+
+	const data = response.callbackQuery?.data
+
+	if (data && data === 'confirm') {
+		await conversation.external(
+			async () => await connectorsApi.deleteConnector(connectorId)
+		)
+		const { message, kb } = await conversation.external(async () =>
+			viewConnectorsList(connector.projectId)
+		)
+		await ctx.editMessageText(message, { reply_markup: kb, parse_mode: 'HTML' })
+		return
 	}
+
+	const { message, kb } = await conversation.external(async () =>
+		viewConnector(connector.id)
+	)
+	await ctx.reply(message, { reply_markup: kb, parse_mode: 'HTML' })
 
 	return
 }

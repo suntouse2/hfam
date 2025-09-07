@@ -1,3 +1,4 @@
+import { handlePayCbLink } from '@/handlers/handlePayCbLink'
 import { connectorService } from '@/services/connectorsService'
 import {
 	connectorCreateSchema,
@@ -14,14 +15,25 @@ connectors.get('/', async (req, res) => {
 	const connectors = await connectorService.getConnectors(filters)
 	res.json(connectors)
 })
-connectors.delete('/:id', async (req, res) => {
-	const id = z.coerce.number().nonnegative().parse(req.params.id)
-	const connector = await connectorService.deleteConnector(id)
-	res.json(connector)
-})
 connectors.post('/', async (req, res) => {
 	const data = connectorCreateSchema.parse(req.body)
 	const connector = await connectorService.createConnector(data)
+	res.json(connector)
+})
+connectors.get('/:id', async (req, res) => {
+	const id = z.coerce.number().nonnegative().parse(req.params.id)
+	const connector = await connectorService.getConnector(id)
+	res.json(connector)
+})
+connectors.get('/:id/callback', async (req, res) => {
+	const id = z.coerce.number().nonnegative().parse(req.params.id)
+	const connector = await connectorService.getConnector(id)
+	res.json({ url: handlePayCbLink(connector.id) })
+})
+
+connectors.delete('/:id', async (req, res) => {
+	const id = z.coerce.number().nonnegative().parse(req.params.id)
+	const connector = await connectorService.deleteConnector(id)
 	res.json(connector)
 })
 connectors.patch('/:id', async (req, res) => {

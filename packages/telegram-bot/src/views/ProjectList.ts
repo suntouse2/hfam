@@ -6,7 +6,7 @@ export async function viewProjectList() {
 	const projects = await projectsApi.getProjects()
 	const kb = new InlineKeyboard()
 
-	projects.forEach((p: any) => {
+	projects.forEach(p => {
 		const label = `${p.name} (ID: ${p.id})`
 		kb.text(label, `project:id-${p.id}`).row()
 	})

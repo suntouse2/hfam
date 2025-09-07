@@ -7,12 +7,15 @@ import type {
 	projectUpdateSchema,
 } from '@hfam/shared/validation/projects'
 
+type ProjectCreatePayload = z.infer<typeof projectCreateSchema>
+type ProjectUpdatePayload = z.infer<typeof projectUpdateSchema>
+
 export const projectsApi = {
 	async getProjects() {
 		return api.get('projects').json<ProjectDTO[]>()
 	},
 
-	async createProject(data: z.infer<typeof projectCreateSchema>) {
+	async createProject(data: ProjectCreatePayload) {
 		return api.post('projects', { json: data }).json<any>()
 	},
 
@@ -24,7 +27,7 @@ export const projectsApi = {
 		return api.delete(`projects/${id}`).json<ProjectDTO>()
 	},
 
-	async updateProject(id: ProjectDTO['id'], data: z.infer<typeof projectUpdateSchema>) {
+	async updateProject(id: ProjectDTO['id'], data: ProjectUpdatePayload) {
 		return api.patch(`projects/${id}`, { json: data }).json<any>()
 	},
 }

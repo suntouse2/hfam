@@ -3,28 +3,34 @@ import { projectsApi } from '@/api/projectsApi'
 import { connectorsApi } from '@/api/connectorsApi'
 import type { MyContext } from '@/bot'
 import type { ProjectDTO } from '@hfam/shared/dto/index'
+import { domainsApi } from '@/api/domainsApi'
 
 export async function viewProject(projectId: ProjectDTO['id']) {
 	const project = await projectsApi.getProject(projectId)
-	const connectors = await connectorsApi.getConnectors({ projectId })
+	const domains = await domainsApi.getDomains({ projectId })
+	const connectors = await connectorsApi.getConnectors({ projectId, active: true })
+
 	const lines = [
 		`📁 <b>${project.name}</b> (ID: ${project.id})`,
 		'',
-		`🔗 <b>Активных доменов:</b> ${project.domains.length}`,
+		`🔗 <b>Активных доменов:</b> ${domains.length}`,
 		`🌐 <b>Активных провайдеров:</b> ${connectors.length}`,
 		'',
 	]
 
 	const kb = new InlineKeyboard()
-		.text('🔗 Мои домены', `project:domains`)
-		.text('🌐 Провайдеры', `project:connectors`)
+		.text('🔗 Домены', `domains`)
+		.text('🌐 Провайдеры', `connectors`)
+
 		.row()
-		.text('🧾 Платежи', `project:payments`)
-		.text('💳 Тест платежа', `project:payments:test`)
+		.text('🧾 Платежи', `payments`)
+		.text('🧪 Тест платежа', `payments:test`)
+		.row()
+		.text('💳 Методы', 'methods')
 		.row()
 		.text('⛔ Удалить проект', `project:delete`)
 		.row()
-		.text('⬅️ Назад', `projects:list`)
+		.text('⬅️ Назад', `projects`)
 
 	return { message: lines.join('\n'), kb }
 }

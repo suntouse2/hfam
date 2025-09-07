@@ -1,27 +1,18 @@
+import { providersApi } from '@/api/providersApi'
 import { InlineKeyboard } from 'grammy'
-import type { Project } from '@prisma/client'
-import { projectsService } from '@/services/projectsService'
-import { providersService } from '@/services/providersService'
 
-export async function renderConnectProviders(projectId: Project['id']) {
-	const project = await projectsService.getProject(projectId)
-	if (!project) return { message: '💀 Такого проекта нет.', kb: new InlineKeyboard() }
+export async function viewProvidersList() {
+	const lines = [`🌐 Доступные провайдеры:`]
 
-	const lines = [
-		`📁 <b>${project.name}</b> (ID: ${project.id})`,
-		``,
-		`🌐 Доступные для подключения провайдеры:`,
-	]
-
-	const providers = await providersService.getProviders()
+	const providers = await providersApi.getProviders({ active: true })
 
 	const kb = new InlineKeyboard()
 	providers.forEach(p => {
 		let label: string
 		label = `${p.title} ┃ 🔌 Подключить`
-		kb.text(label, `connectorsAdd_${projectId}_${p.id}`).row()
+		kb.text(label, `provider:key-${p.key}`).row()
 	})
-	kb.text('⬅️ Назад', `connectors_${projectId}`)
+	kb.text('⬅️ Назад', `connectors`)
 
 	return { message: lines.join('\n'), kb }
 }

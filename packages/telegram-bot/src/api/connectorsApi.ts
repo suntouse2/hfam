@@ -2,8 +2,8 @@ import type { z } from 'zod'
 import { api } from './api'
 import type { ConnectorDTO } from '@hfam/shared/dto/index'
 import type {
-	connectorsFindSchema,
 	connectorCreateSchema,
+	connectorsFindSchema,
 	connectorUpdateSchema,
 } from '@hfam/shared/validation/connectors'
 
@@ -30,5 +30,8 @@ export const connectorsApi = {
 
 	async deleteConnector(id: ConnectorDTO['id']) {
 		return api.delete(`connectors/${id}`).json<ConnectorDTO>()
+	},
+	async getConnectorCallbackPath(id: ConnectorDTO['id']) {
+		return api.get(`connectors/${id}/callback`).json<{ url: string }>()
 	},
 }

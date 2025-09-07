@@ -17,8 +17,8 @@ export async function createProject(
 
 	if (response.has('message:text')) {
 		await response.deleteMessage()
-		await conversation.external(() =>
-			projectsApi.createProject({ name: response.message!.text })
+		await conversation.external(
+			async () => await projectsApi.createProject({ name: response.message!.text })
 		)
 		const { message, kb } = await conversation.external(() => viewProjectList())
 

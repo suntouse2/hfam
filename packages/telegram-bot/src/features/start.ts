@@ -5,7 +5,7 @@ import { InlineKeyboard } from 'grammy'
 export const start = new Composer()
 
 start.command('start', async ctx => {
-	const kb = new InlineKeyboard().text('💠 Мои проекты', 'projects:list')
+	const kb = new InlineKeyboard().text('💠 Мои проекты', 'projects')
 	await ctx.reply(
 		'🦋 Быстрые & удобные подключение провайдеров, AI инструменты, множество провайдеров, балансеры',
 		{ reply_markup: kb }
@@ -14,7 +14,7 @@ start.command('start', async ctx => {
 
 start.callbackQuery('start', async ctx => {
 	ctx.answerCallbackQuery()
-	const kb = new InlineKeyboard().text('💠 Мои проекты', 'projects:list')
+	const kb = new InlineKeyboard().text('💠 Мои проекты', 'projects')
 	await ctx.reply(
 		'🦋 Быстрые & удобные подключение провайдеров, AI инструменты, множество провайдеров, балансеры',
 		{ reply_markup: kb }
