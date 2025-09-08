@@ -13,9 +13,23 @@ gateway.post('/', async (req, res) => {
 	const gateway = gatewayGetParams.parse(req.body)
 	const methods = await methodsService
 		.getMethods({ projectId: gateway.projectId, active: true })
-		.then(m => m.map(m => ({ id: m.id, label: m.label, imageSrc: m.imageSrc })))
+		.then(m =>
+			m.map(m => ({
+				id: m.id,
+				label: m.label,
+				imageSrc: m.imageSrc,
+				minAmount: m.minAmount,
+				maxAmount: m.maxAmount,
+			}))
+		)
 
-	res.render('pay', { gateway, methods })
+	const filteredMethods = methods.filter(m => {
+		if (m.minAmount) if (m.minAmount > gateway.amount) return false
+		if (m.maxAmount) if (m.maxAmount < gateway.amount) return false
+		return true
+	})
+
+	res.render('pay', { gateway, filteredMethods })
 })
 gateway.get('/', async (req, res) => {
 	const gateway = gatewayGetParams.parse(req.query)
