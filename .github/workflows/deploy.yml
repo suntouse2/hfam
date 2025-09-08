@@ -24,7 +24,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             # если первый раз — клонируем
             if [ ! -d "/home/hfam/engine/.git" ]; then
-              git clone git@github.com:YOUR_USER/YOUR_REPO.git /home/hfam
+              git clone git@github.com:suntouse2/hfam.git /home/hfam
             fi
 
             cd /home/hfam
