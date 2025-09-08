@@ -1,7 +1,12 @@
 {
-	"name": "hfam",
 	"private": true,
 	"workspaces": [
 		"packages/*"
-	]
+	],
+	"scripts": {
+		"build:shared": "npm run build -w @hfam/shared",
+		"build:engine": "npm run build -w @hfam/engine",
+		"build:bot": "npm run build -w @hfam/telegram-bot",
+		"build": "npm run build:shared && npm run build:engine && npm run build:bot"
+	}
 }

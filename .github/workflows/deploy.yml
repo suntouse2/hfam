@@ -17,33 +17,33 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.PORT }} -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy over SSH
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
-            # если первый раз — клонируем
-            if [ ! -d "/home/hfam/engine/.git" ]; then
-              git clone git@github.com:suntouse2/hfam.git /home/hfam
+          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            set -e
+
+            APP_DIR="/home/hfam"
+            REPO_URL="git@github.com:suntouse2/hfam.git"
+
+            echo "📥 Обновляем или клонируем репозиторий"
+            if [ ! -d "$APP_DIR/.git" ]; then
+              git clone "$REPO_URL" "$APP_DIR"
+            else
+              cd "$APP_DIR"
+              git fetch --all
+              git reset --hard origin/master
             fi
 
-            cd /home/hfam
-
-            echo "📥 Обновляем код"
-            git reset --hard
-            git pull origin master
-
-            echo "📦 Собираем engine"
-            cd packages/engine
+            echo "📦 Собираем пакеты"
+            cd "$APP_DIR"
             npm ci
             npm run build
-            pm2 restart engine || pm2 start npm --name "engine" -- run start
 
-            echo "🤖 Собираем telegram-bot"
-            cd packages/telegram-bot
-            npm ci
-            npm run build
-            pm2 restart telegram-bot || pm2 start npm --name "telegram-bot" -- run start
+            echo "🚀 Перезапуск pm2 процессов"
+            pm2 restart engine || pm2 start npm --name "engine" --workspace packages/engine -- run start
+            pm2 restart telegram-bot || pm2 start npm --name "telegram-bot" --workspace packages/telegram-bot -- run start
 
             echo "✅ Deploy completed!"
           EOF
