@@ -28,8 +28,9 @@ export async function viewConnectorsList(projectId: ProjectDTO['id'] | null) {
 
 		kb.text(label, `connector:id-${c.id}`).row()
 	})
-	kb.text('➕ Подключить провайдер ', `providers`).row(),
-		kb.text('⬅️ Назад', project ? `project:id-${projectId}` : `projects`)
+	kb.text('➕ Подключить провайдер ', `providers`).row()
+	kb.text('🧪 Тест платежа', `payments:test`).row()
+	kb.text('⬅️ Назад', project ? `project:id-${projectId}` : `projects`)
 
 	return { message: lines.join('\n'), kb }
 }

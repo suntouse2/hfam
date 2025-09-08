@@ -35,7 +35,17 @@ export const methodsService = {
 	},
 	// prettier-ignore
 	async updateMethod(id: MethodDTO['id'],payload: MethodUpdatePayload): Promise<MethodDTO> {
-		const method = await prisma.method.update({ where: { id },include: { project: true, connector: true }, data: payload })
+		const method = await prisma.method.update({ where: { id },include: { project: true, connector: true }, data: {
+			label: payload.label,
+			imageSrc: payload.imageSrc,
+			byProvider: payload.byProvider,
+			connectorId: payload.connectorId,
+			active: payload.active,
+			minAmount: payload.minAmount,
+			maxAmount: payload.maxAmount,
+			method: payload.method,
+			showLabel: payload.showLabel
+		} })
 		return method as MethodDTO
 	},
 	async deleteMethod(id: MethodDTO['id']): Promise<MethodDTO> {

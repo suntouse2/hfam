@@ -19,7 +19,10 @@ export const handlePay = async (payPayload: PayPayload) => {
 	const pInstance = providers.useInstance(connector.byProvider)
 
 	const payment = await paymentsService.createPayment(
-		paymentCreateSchema.parse(payPayload)
+		paymentCreateSchema.parse({
+			...payPayload,
+			connector,
+		})
 	)
 	const updates = await pInstance.create({
 		connector,

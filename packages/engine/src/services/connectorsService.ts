@@ -66,7 +66,10 @@ export const connectorService = {
 	async balancer(filters: ConnectorBalancerFindPayload) {
 		const { method, ...rest } = filters
 		const connectors = await prisma.connector.findMany({
-			where: rest,
+			where: {
+				...rest,
+				active: true,
+			},
 			orderBy: { bIndex: 'asc' },
 			include: { project: true },
 		})

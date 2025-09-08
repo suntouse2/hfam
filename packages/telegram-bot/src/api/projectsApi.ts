@@ -16,7 +16,7 @@ export const projectsApi = {
 	},
 
 	async createProject(data: ProjectCreatePayload) {
-		return api.post('projects', { json: data }).json<any>()
+		return api.post('projects', { json: data }).json<ProjectDTO>()
 	},
 
 	async getProject(id: ProjectDTO['id']) {

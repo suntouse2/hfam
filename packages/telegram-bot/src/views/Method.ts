@@ -1,43 +1,59 @@
 import { methodsApi } from '@/api/methodsApi'
-import type { MethodDTO } from '@hfam/shared/dto/index'
+import { providersApi } from '@/api/providersApi'
 import { InlineKeyboard } from 'grammy'
+import z from 'zod'
 
-export async function viewMethod(methodId: MethodDTO['id']) {
-	const method = await methodsApi.getMethod(methodId)
+export async function viewMethod(connectorId: number) {
+	const method = await methodsApi.getMethod(connectorId)
 
-	const connector = method.connector
-		? `${method.connector.name} (ID: ${method.connectorId})`
-		: null
-
+	const kb = new InlineKeyboard()
 	const lines: string[] = []
 
-	lines.push(`📁 <b>${method.project.name}</b> (ID: ${method.projectId})`)
-	lines.push('')
+	const provider = method.byProvider
+		? await providersApi.getProvider(method.byProvider)
+		: null
+
+	lines.push(`🌐 Название: <b>${method.label || 'Без имени'}</b> (ID: ${method.id})`)
+	lines.push(' ')
+
 	const stateText = method.active ? '🟢 Включен' : '⭕ Выключен'
 	lines.push(`Состояние: <b>${stateText}</b>`)
-	lines.push('')
 
-	if (connector) {
-		lines.push(`<b>🌐 Провайдер:</b> ${connector}`)
-	} else {
-		lines.push(
-			`🤖 <b>(Провайдер не задан) SmartPay:</b>\n\n` +
-				`— Фильтр по провайдерам: <b><i>${method.byProvider ?? 'не указан'}</i></b>\n` +
-				`— Фильтр по методу: <b><i>${method.method ?? 'не указан'}</i></b>`
-		)
-	}
-	lines.push('')
 	const toggleText = method.active ? '⏻ Выключить' : '⏻ Включить'
-	const kb = new InlineKeyboard()
-	kb.text(toggleText, `method:${method.active ? 'stop' : 'active'}`)
-		.row()
-		.row()
-		.text('📊 Лимиты', `method_limits_${method.id}`)
-		.text('⚙️ Настроить', `method_smartpay_${method.id}`)
-		.row()
-		.text('⛔  Удалить метод', `method_delete_${method.id}`)
-		.row()
-		.text('⬅️ Назад', `methods`)
+	kb.text(toggleText, `method:${method.active ? 'stop' : 'active'}`).row()
 
-	return { message: lines.join('\n'), kb }
+	kb.text(
+		`${method.showLabel ? '✅ Имя отображается' : '❌ Имя не отображается'}`,
+		`method:configure:showLabel:${method.showLabel ? 'false' : 'true'}`
+	)
+
+	kb.row()
+
+	if (method.imageSrc && z.string().url().safeParse(method.imageSrc).success) {
+		kb.url('🏞️ Иконка', method.imageSrc).row()
+	}
+
+	kb.text(
+		`🌐 Провайдер: ${method?.connector?.name || 'Не выбран'}`,
+		`method:configure:connector`
+	)
+	kb.row()
+
+	if (!method.connector) {
+		kb.text(`🔗 Шлюз: ${provider?.title || 'Не выбран'}`, `method:configure:provider`)
+		kb.row()
+		kb.text(`🧩 Метод: ${method.method || 'Не выбран'}`, `method:configure:methods`)
+		kb.row()
+	}
+
+	kb.text(`➖ От ${method.minAmount || ' - '}₽`, `method:configure:minAmount`)
+	kb.text(`➕ До ${method.maxAmount || ' - '}₽`, `method:configure:maxAmount`)
+	kb.row()
+	kb.text('⛔ Удалить метод', `method:delete`)
+	kb.row().text('⬅️ Назад', `methods`)
+
+	return {
+		message: lines.join('\n'),
+		kb,
+	}
 }

@@ -38,8 +38,10 @@
 				<p class="title">Быстрая оплата</p>
 				<div class="btns">
 					<% project.methods.filter(m => m.active).forEach(function(method) { %>
-					<button class="btn method">
+					<button class="btn method" data-id="<%= method.id %>">
+						<% if (method.imageSrc) { %>
 						<img src="<%= method.imageSrc %>" alt="method icon" />
+						<% } %>
 						<span><%= method.label %></span>
 					</button>
 					<% }) %>
@@ -49,17 +51,7 @@
 				</p>
 			</div>
 		</main>
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const toggleBtn = document.getElementById('toggle-info')
-				const wrapper = document.querySelector('.info-wrapper')
-				const arrow = toggleBtn.querySelector('.arrow')
 
-				toggleBtn.addEventListener('click', () => {
-					wrapper.classList.toggle('hidden')
-					arrow.classList.toggle('right')
-				})
-			})
-		</script>
+		<script src="/static/app.js"></script>
 	</body>
 </html>

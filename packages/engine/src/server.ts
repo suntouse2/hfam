@@ -23,19 +23,6 @@ export const server = express()
 
 server.use(helmet())
 
-server.use(
-	'/static',
-	express.static(join(__dirname, '../public'), {
-		setHeaders(res) {
-			res.setHeader('Cache-Control', 'public, max-age=31536000')
-			res.setHeader('X-Content-Type-Options', 'nosniff')
-		},
-	})
-)
-
-server.set('view engine', 'ejs')
-server.set('views', join(__dirname, '../views'))
-
 server.use(express.json())
 
 server.use('/payments', auth, payments)
@@ -44,7 +31,7 @@ server.use('/providers', auth, providers)
 server.use('/connectors', auth, connectors)
 server.use('/domains', auth, domains)
 server.use('/methods', auth, methods)
-server.use('/pay', pay)
+server.use('/pay', auth, pay)
 server.use('/gateway', gateway)
 
 server.get('/ping', (_req, res) => {

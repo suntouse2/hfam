@@ -21,7 +21,7 @@ model Project {
 model Method {
   id          Int        @id @default(autoincrement())
   label       String
-  imageSrc    String
+  imageSrc    String?
   active      Boolean    @default(false)
   method      String?
   byProvider  String?
@@ -31,6 +31,7 @@ model Method {
   projectId   Int
   minAmount   Int?
   maxAmount   Int?
+  showLabel   Boolean    @default(true)
 
   @@map("methods")
 }

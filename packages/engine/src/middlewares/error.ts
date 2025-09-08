@@ -18,6 +18,8 @@ export function error(err: unknown, _req: Request, res: Response, _next: NextFun
 	}
 
 	if (err instanceof Prisma.PrismaClientKnownRequestError) {
+		console.log(err)
+
 		return res.status(400).json({ error: 'Invalid database request' })
 	}
 

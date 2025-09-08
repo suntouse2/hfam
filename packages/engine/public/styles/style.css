@@ -82,6 +82,10 @@ body {
 	cursor: pointer;
 	font-size: 14px;
 	text-align: center;
+	transition: opacity 0.1s ease;
+}
+.btn:hover {
+	opacity: 0.5;
 }
 
 .btn.method {

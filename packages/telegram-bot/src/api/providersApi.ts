@@ -7,9 +7,9 @@ import z from 'zod'
 type ConnectorsFindPayload = z.infer<typeof providersFindSchema>
 
 export const providersApi = {
-	async getProviders(filters: ConnectorsFindPayload) {
+	async getProviders(filters?: ConnectorsFindPayload) {
 		const params = new URLSearchParams()
-		Object.entries(filters).forEach(([key, value]) => {
+		Object.entries(filters ?? {}).forEach(([key, value]) => {
 			if (value === undefined) return
 			if (Array.isArray(value)) {
 				value.forEach(v => params.append(key, v))

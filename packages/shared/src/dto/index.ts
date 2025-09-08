@@ -50,7 +50,7 @@ export type PaymentDTO = {
 export type MethodDTO = {
 	id: number
 	label: string
-	imageSrc: string
+	imageSrc: string | null
 	active: boolean
 	method?: string
 	byProvider?: string
@@ -60,4 +60,5 @@ export type MethodDTO = {
 	projectId: ProjectDTO['id']
 	minAmount?: number
 	maxAmount?: number
+	showLabel?: boolean
 }

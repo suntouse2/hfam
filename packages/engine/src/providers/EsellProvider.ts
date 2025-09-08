@@ -49,12 +49,17 @@ export class EsellProvider implements BaseProvider {
 			})
 			.json<{ id: number; success: boolean; location?: string }>()
 
-		if (response.success === false)
+		if (response.success === false) {
+			console.log(response)
+
 			throw ErrorAPI.badRequest('Provider success key is false')
+		}
 
-		if (!response.location)
+		if (!response.location) {
+			console.log(response)
+
 			throw ErrorAPI.badRequest('Provider response missing required field "location"')
-
+		}
 		return { paymentId: response.id.toString(), paymentUrl: response.location }
 	}
 }
