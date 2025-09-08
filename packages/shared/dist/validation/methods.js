@@ -1,4 +1,4 @@
-import z from 'zod';
+import z from "zod";
 export const methodCreateSchema = z.object({
     label: z.string(),
     imageSrc: z.string().nullable().optional(),
@@ -8,14 +8,14 @@ export const methodCreateSchema = z.object({
     minAmount: z.coerce.number().nullable().optional(),
     maxAmount: z.coerce.number().nullable().optional(),
     method: z.string().optional(),
-    showLabel: z.coerce.boolean().optional(),
+    showLabel: z.coerce.boolean().optional()
 });
 export const methodsFindSchema = z.object({
     projectId: z.number().nonnegative().optional(),
     byProvider: z.string().optional(),
     connectorId: z.number().optional(),
     active: z.coerce.boolean().optional(),
-    method: z.string().optional(),
+    method: z.string().optional()
 });
 export const methodUpdateSchema = z.object({
     label: z.string().optional(),
@@ -26,5 +26,5 @@ export const methodUpdateSchema = z.object({
     minAmount: z.coerce.number().nullable().optional(),
     maxAmount: z.coerce.number().nullable().optional(),
     method: z.string().nullable().optional(),
-    showLabel: z.coerce.boolean().optional(),
+    showLabel: z.coerce.boolean().optional()
 });

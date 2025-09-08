@@ -1,4 +1,3 @@
-import 'source-map-support/register'
 import chalk from 'chalk'
 import ErrorStackParser from 'error-stack-parser'
 
