@@ -34,13 +34,13 @@ jobs:
             git pull origin master
 
             echo "📦 Собираем engine"
-            cd engine
+            cd packages/engine
             npm ci
             npm run build
             pm2 restart engine || pm2 start npm --name "engine" -- run start
 
             echo "🤖 Собираем telegram-bot"
-            cd ../telegram-bot
+            cd packages/telegram-bot
             npm ci
             npm run build
             pm2 restart telegram-bot || pm2 start npm --name "telegram-bot" -- run start
