@@ -5,8 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
-		"prebuild": "rimraf dist && tsc --noEmit",
-		"build": "npm run build -w @hfam/shared && npm run build -w @hfam/engine",
+		"build": "swc src -d dist --strip-leading-paths --config-file=swc.build.json",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit"
 	},
