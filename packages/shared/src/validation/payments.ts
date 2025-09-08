@@ -30,3 +30,12 @@ export const paymentUpdateSchema = z.object({
 	paymentQr: z.string().optional(),
 	method: z.string().optional(),
 })
+
+export const paymentFindSchema = z.object({
+	projectId: z.coerce.number().nonnegative().optional(),
+	status: z.enum(['CREATED', 'PAID', 'REFUND'] as PaymentDTO['status'][]).optional(),
+	createdAt: z.string().date().optional(),
+	updatedAt: z.string().date().optional(),
+	domain: domain.optional(),
+	query: z.string().optional(),
+})

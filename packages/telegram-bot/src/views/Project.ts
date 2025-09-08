@@ -23,7 +23,6 @@ export async function viewProject(projectId: ProjectDTO['id']) {
 		.text('🌐 Провайдеры', `connectors`)
 
 		.row()
-		.text('🧾 Платежи', `payments`)
 		.text('💳 Методы', 'methods')
 		.row()
 		.text('⛔ Удалить проект', `project:delete`)

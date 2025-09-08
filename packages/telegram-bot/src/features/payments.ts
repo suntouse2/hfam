@@ -1,7 +1,9 @@
 import { connectorsApi } from '@/api/connectorsApi'
 import { domainsApi } from '@/api/domainsApi'
 import { payApi } from '@/api/payApi'
+import { paymentsApi } from '@/api/paymentsApi'
 import type { MyContext } from '@/bot'
+import viewPaymentsList from '@/views/PaymentsList'
 import viewPaymentTest from '@/views/PaymentTest'
 import type { ConnectorDTO } from '@hfam/shared/dto/index'
 import { HTTPError } from 'got'
@@ -9,6 +11,16 @@ import { Composer } from 'grammy'
 import { nanoid } from 'nanoid'
 
 export const payments = new Composer<MyContext>()
+
+payments.callbackQuery(/^payments:(\d+)$/, async ctx => {
+	await ctx.answerCallbackQuery()
+	const { projectId } = ctx.session
+	if (!projectId) return
+
+	const page = parseInt(ctx.match[1]!, 10) || 1
+	const { message, kb } = await viewPaymentsList(projectId, page)
+	await ctx.editMessageText(message, { reply_markup: kb, parse_mode: 'HTML' })
+})
 
 payments.callbackQuery('payments:test', async ctx => {
 	await ctx.answerCallbackQuery()

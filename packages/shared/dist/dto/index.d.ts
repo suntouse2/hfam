@@ -65,4 +65,9 @@ export type MethodDTO = {
     maxAmount?: number;
     showLabel?: boolean;
 };
+export interface PaginationDTO<T> {
+    data: T[];
+    count: number;
+    limit: number;
+}
 //# sourceMappingURL=index.d.ts.map

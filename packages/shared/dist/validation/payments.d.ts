@@ -30,4 +30,16 @@ export declare const paymentUpdateSchema: z.ZodObject<{
     paymentQr: z.ZodOptional<z.ZodString>;
     method: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
+export declare const paymentFindSchema: z.ZodObject<{
+    projectId: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
+    status: z.ZodOptional<z.ZodEnum<{
+        CREATED: "CREATED";
+        PAID: "PAID";
+        REFUND: "REFUND";
+    }>>;
+    createdAt: z.ZodOptional<z.ZodString>;
+    updatedAt: z.ZodOptional<z.ZodString>;
+    domain: z.ZodOptional<z.ZodPipe<z.ZodString, z.ZodTransform<any, string>>>;
+    query: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
 //# sourceMappingURL=payments.d.ts.map
