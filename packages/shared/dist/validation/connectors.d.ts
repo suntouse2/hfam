@@ -26,9 +26,9 @@ export declare const connectorUpdateSchema: z.ZodObject<{
     }, z.core.$strip>>>;
 }, z.core.$strip>;
 export declare const connectorBalancerFindSchema: z.ZodObject<{
-    byProvider: z.ZodOptional<z.ZodString>;
+    byProvider: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     projectId: z.ZodOptional<z.ZodCoercedNumber<unknown>>;
     active: z.ZodOptional<z.ZodCoercedBoolean<unknown>>;
-    method: z.ZodOptional<z.ZodString>;
+    method: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;
 //# sourceMappingURL=connectors.d.ts.map

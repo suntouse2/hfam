@@ -14,7 +14,9 @@ export function error(err: unknown, _req: Request, res: Response, _next: NextFun
 		const stack = gfs(err)
 		console.log(stack?.join('\n') ?? err.stack)
 
-		return res.status(400).json({ error: 'validation error' })
+		return res.status(400).json({
+			error: 'validation error',
+		})
 	}
 
 	if (err instanceof Prisma.PrismaClientKnownRequestError) {

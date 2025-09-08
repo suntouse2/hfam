@@ -2,6 +2,7 @@ import z from 'zod'
 import { domain } from '../helpers/domain'
 
 export const gatewayGetParams = z.object({
+	projectId: z.coerce.number().nonnegative(),
 	amount: z.coerce.number().nonnegative(),
 	description: z.string(),
 	domain: domain,
@@ -9,6 +10,7 @@ export const gatewayGetParams = z.object({
 })
 
 export const gatewayPayParams = z.object({
+	projectId: z.coerce.number().nonnegative(),
 	methodId: z.coerce.number().nonnegative(),
 	amount: z.coerce.number().nonnegative(),
 	description: z.string(),

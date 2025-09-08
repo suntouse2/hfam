@@ -2,7 +2,7 @@ import z from 'zod'
 
 export const methodCreateSchema = z.object({
 	label: z.string(),
-	imageSrc: z.string().nullable(),
+	imageSrc: z.string().nullable().optional(),
 	projectId: z.number().nonnegative(),
 	byProvider: z.string().optional(),
 	connectorId: z.number().optional(),

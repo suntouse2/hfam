@@ -9,41 +9,50 @@ import z from 'zod'
 
 export const gateway = Router()
 
-gateway.get('/:id/methods', async (req, res) => {
-	const gateway = gatewayGetParams.parse(req.query)
-	const id = z.coerce.number().nonnegative().parse(req.params.id)
-	const project = await projectsService.getProject(id)
-	const domains = await domainsService.getDomains({ projectId: project.id })
+gateway.post('/', async (req, res) => {
+	const gateway = gatewayGetParams.parse(req.body)
+	const methods = await methodsService
+		.getMethods({ projectId: gateway.projectId, active: true })
+		.then(m => m.map(m => ({ id: m.id, label: m.label, imageSrc: m.imageSrc })))
 
-	if (!domains.some(m => m.value == gateway.domain))
-		throw ErrorAPI.badRequest('invalid domain')
+	res.render('pay', { gateway, methods })
+})
+gateway.get('/', async (req, res) => {
+	const gateway = gatewayGetParams.parse(req.query)
+	const methods = await methodsService
+		.getMethods({ projectId: gateway.projectId, active: true })
+		.then(m => m.map(m => ({ id: m.id, label: m.label, imageSrc: m.imageSrc })))
+
+	res.render('pay', { gateway, methods })
 })
 
-gateway.get('/:id/pay', async (req, res) => {
-	const gateway = gatewayPayParams.parse(req.query)
+gateway.get('/:id/methods', async (req, res) => {
 	const id = z.coerce.number().nonnegative().parse(req.params.id)
-	const project = await projectsService.getProject(id)
-	const domains = await domainsService.getDomains({ projectId: project.id })
-	const method = await methodsService.getMethod(gateway.methodId)
-	if (!domains.some(m => m.value == gateway.domain))
-		throw ErrorAPI.badRequest('invalid domain')
+	const methods = await methodsService
+		.getMethods({ projectId: id, active: true })
+		.then(m => m.map(m => ({ id: m.id, label: m.label, imageSrc: m.imageSrc })))
 
-	if (!method.active) {
-		throw ErrorAPI.badRequest('method is not active')
-	}
+	res.json(methods)
+})
+
+gateway.post('/pay', async (req, res) => {
+	console.log(req.body)
+
+	const gateway = gatewayPayParams.parse(req.body)
+	const project = await projectsService.getProject(gateway.projectId)
+	const method = await methodsService.getMethod(gateway.methodId)
+
+	if (!method.active) throw ErrorAPI.badRequest('method is not active')
 
 	const pay = await handlePay({
-		byProvider: method.byProvider === null ? undefined : method.byProvider,
+		projectId: project.id,
 		orderId: gateway.orderId,
 		amount: gateway.amount,
 		description: gateway.description,
-		projectId: project.id,
+		domain: gateway.domain,
+		byProvider: method.byProvider,
 		payload: {},
 	})
-	res.json({
-		paymentUrl: pay.paymentUrl,
-		paymentId: pay.paymentId,
-		paymentQr: pay.paymentQr,
-		paymentStatus: pay.status,
-	})
+
+	res.json(pay)
 })

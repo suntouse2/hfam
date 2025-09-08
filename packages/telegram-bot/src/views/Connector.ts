@@ -33,8 +33,9 @@ export async function viewConnector(connectorId: number) {
 		kb.text(`🔑 ${label}: ${value ?? 'НЕ УКАЗАН'}`, `connector:key-${key}`).row()
 	})
 
-	kb.text('🔗 Получить коллбэк-ссылку', `connector:callback`).row(),
-		kb.text('⛔ Удалить провайдер', `connector:delete`)
+	kb.text('🔗 Получить коллбэк-ссылку', `connector:callback`)
+	kb.row()
+	kb.text('⛔ Удалить провайдер', `connector:delete`)
 	kb.row().text('⬅️ Назад', `connectors`)
 
 	return {

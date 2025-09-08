@@ -3,7 +3,6 @@ import 'dotenv/config'
 
 import { error } from '@/middlewares/error'
 import { auth } from './middlewares/auth'
-
 import { projects } from './routes/projects'
 import { providers } from './routes/providers'
 import { connectors } from './routes/connectors'
@@ -23,7 +22,13 @@ export const server = express()
 
 server.use(helmet())
 
-server.use(express.json())
+server.use('/static', express.static(join(__dirname, '../public')))
+
+server.set('view engine', 'ejs')
+server.set('views', join(__dirname, '../views'))
+
+server.use(express.json({ limit: '1mb' }))
+server.use(express.urlencoded({ extended: true, limit: '1mb' }))
 
 server.use('/payments', auth, payments)
 server.use('/projects', auth, projects)
@@ -32,10 +37,10 @@ server.use('/connectors', auth, connectors)
 server.use('/domains', auth, domains)
 server.use('/methods', auth, methods)
 server.use('/pay', auth, pay)
+
 server.use('/gateway', gateway)
 
-server.get('/ping', (_req, res) => {
-	res.send('pong')
-})
+//prettier-ignore
+server.get('/ping', (_req, res) => {res.send('pong')})
 
 server.use(error)

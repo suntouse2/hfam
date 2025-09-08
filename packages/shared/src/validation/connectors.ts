@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { nullable, z } from 'zod'
 
 export const connectorCredentialSchema = z.object({
 	label: z.string().max(64),
@@ -31,8 +31,8 @@ export const connectorUpdateSchema = z.object({
 	schema: connectorSchemaSchema.optional(),
 })
 export const connectorBalancerFindSchema = z.object({
-	byProvider: z.string().trim().optional(),
+	byProvider: z.string().trim().nullable().optional(),
 	projectId: z.coerce.number().nonnegative().optional(),
 	active: z.coerce.boolean().optional(),
-	method: z.string().trim().nonempty().optional(),
+	method: z.string().trim().nullable().optional(),
 })

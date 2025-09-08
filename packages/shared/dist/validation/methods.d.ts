@@ -1,7 +1,7 @@
 import z from 'zod';
 export declare const methodCreateSchema: z.ZodObject<{
     label: z.ZodString;
-    imageSrc: z.ZodNullable<z.ZodString>;
+    imageSrc: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     projectId: z.ZodNumber;
     byProvider: z.ZodOptional<z.ZodString>;
     connectorId: z.ZodOptional<z.ZodNumber>;

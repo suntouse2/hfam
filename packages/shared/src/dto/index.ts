@@ -45,6 +45,7 @@ export type PaymentDTO = {
 	updatedAt: Date
 	description: string
 	hookWait: boolean
+	domain: string
 }
 
 export type MethodDTO = {

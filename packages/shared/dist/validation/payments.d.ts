@@ -10,6 +10,7 @@ export declare const paymentCreateSchema: z.ZodObject<{
         byProvider: z.ZodString;
         name: z.ZodString;
     }, z.core.$strip>;
+    domain: z.ZodPipe<z.ZodString, z.ZodTransform<any, string>>;
     amount: z.ZodNumber;
     paymentId: z.ZodOptional<z.ZodString>;
     paymentUrl: z.ZodOptional<z.ZodString>;

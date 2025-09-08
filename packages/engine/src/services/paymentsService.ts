@@ -11,19 +11,13 @@ type PaymentUpdatePayload = z.infer<typeof paymentUpdateSchema>
 
 export const paymentsService = {
 	async createPayment(payload: PaymentCreatePayload): Promise<PaymentDTO> {
-		const payment = await prisma.payment.create({
-			data: payload,
-		})
+		const payment = await prisma.payment.create({ data: payload })
 		return payment as PaymentDTO
 	},
-	async updatePayment(
-		id: PaymentDTO['id'],
-		payload: PaymentUpdatePayload
-	): Promise<PaymentDTO> {
-		const payment = await prisma.payment.update({
-			where: { id },
-			data: payload,
-		})
+	//prettier-ignore
+	async updatePayment
+	(id: PaymentDTO['id'],payload: PaymentUpdatePayload): Promise<PaymentDTO> {
+		const payment = await prisma.payment.update({ where: { id }, data: payload })
 		return payment as PaymentDTO
 	},
 }

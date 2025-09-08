@@ -1,4 +1,5 @@
 import { connectorsApi } from '@/api/connectorsApi'
+import { domainsApi } from '@/api/domainsApi'
 import { payApi } from '@/api/payApi'
 import type { MyContext } from '@/bot'
 import viewPaymentTest from '@/views/PaymentTest'
@@ -13,7 +14,7 @@ payments.callbackQuery('payments:test', async ctx => {
 	await ctx.answerCallbackQuery()
 	const { projectId } = ctx.session
 	if (!projectId) return
-
+	const domains = await domainsApi.getDomains({ projectId })
 	const connectors = await connectorsApi.getConnectors({ projectId, active: true })
 	if (!connectors.length) return ctx.reply('😔 Нет доступных провайдеров')
 
@@ -22,6 +23,8 @@ payments.callbackQuery('payments:test', async ctx => {
 		status: '⏳ Ожидание платежа',
 		paymentUuid: null as string | null,
 	}))
+
+	if (!domains.length) return ctx.reply('😔 Нет доступных доменов')
 
 	const update = async (id: ConnectorDTO['id'], status: string, uuid: string | null) => {
 		const s = statuses.find(v => v.connector.id === id)
@@ -35,6 +38,7 @@ payments.callbackQuery('payments:test', async ctx => {
 		await update(c.id, '🔄 Создание платежа', null)
 		try {
 			const p = await payApi.pay({
+				domain: domains[0]?.value || '',
 				orderId: nanoid(),
 				amount: 100,
 				description: 'Тестовый платёж',

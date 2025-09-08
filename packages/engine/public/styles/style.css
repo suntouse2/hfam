@@ -62,7 +62,7 @@ body {
 	align-items: center;
 	gap: 0.5rem;
 }
-.btns {
+.methods {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
@@ -74,6 +74,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	width: 100%;
 	font-family: 'Montserrat';
 	height: 40px;
 	font-weight: 500;
@@ -159,4 +160,8 @@ a {
 }
 .arrow.right {
 	transform: rotate(-90deg);
+}
+.main.loading {
+	opacity: 0.2;
+	pointer-events: none;
 }

@@ -64,10 +64,11 @@ export const connectorService = {
 		return connector as ConnectorDTO
 	},
 	async balancer(filters: ConnectorBalancerFindPayload) {
-		const { method, ...rest } = filters
 		const connectors = await prisma.connector.findMany({
 			where: {
-				...rest,
+				byProvider: filters.byProvider ?? undefined,
+				projectId: filters.projectId,
+				methods: { some: { method: filters.method } },
 				active: true,
 			},
 			orderBy: { bIndex: 'asc' },
@@ -76,7 +77,7 @@ export const connectorService = {
 		const filtered = connectors.filter(c => {
 			const provider = providers.getProvider(c.byProvider)
 			if (!provider.active) return false
-			return method ? provider.methods.includes(method) : true
+			return filters.method ? provider.methods.includes(filters.method) : true
 		})
 		if (!filtered.length)
 			throw ErrorAPI.badRequest('No available balanced connectors by this params')

@@ -36,16 +36,28 @@
 
 			<div class="box">
 				<p class="title">Быстрая оплата</p>
-				<div class="btns">
-					<% project.methods.filter(m => m.active).forEach(function(method) { %>
-					<button class="btn method" data-id="<%= method.id %>">
-						<% if (method.imageSrc) { %>
-						<img src="<%= method.imageSrc %>" alt="method icon" />
-						<% } %>
-						<span><%= method.label %></span>
-					</button>
-					<% }) %>
-				</div>
+				<form id="pay-form" action="/gateway/pay" method="post">
+					<input type="hidden" name="projectId" value="<%= gateway.projectId %>" />
+					<input type="hidden" name="orderId" value="<%= gateway.orderId %>" />
+					<input type="hidden" name="amount" value="<%= gateway.amount %>" />
+					<input type="hidden" name="description" value="<%= gateway.description %>" />
+					<input type="hidden" name="domain" value="<%= gateway.domain %>" />
+					<div class="methods">
+						<% methods.forEach(function(method) { %>
+						<button
+							type="submit"
+							class="btn method"
+							name="methodId"
+							value="<%= method.id %>"
+						>
+							<% if (method.imageSrc) { %>
+							<img src="<%= method.imageSrc %>" alt="method icon" />
+							<% } %>
+							<span><%= method.label %></span>
+						</button>
+						<% }) %>
+					</div>
+				</form>
 				<p class="terms">
 					Нажимая «Оплатить», вы соглашаетесь <a href="/terms">с условиями</a>
 				</p>

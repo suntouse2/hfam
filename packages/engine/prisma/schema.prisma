@@ -75,6 +75,7 @@ model Payment {
   projectId   Int
   connector   Json
   method      String?
+  domain      String        @default("")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
