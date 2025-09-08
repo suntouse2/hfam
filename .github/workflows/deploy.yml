@@ -38,7 +38,7 @@ jobs:
 
             echo "📦 Собираем пакеты"
             cd "$APP_DIR"
-            npm ci
+            npm install
             npm run build
 
             echo "🚀 Перезапуск pm2 процессов"
