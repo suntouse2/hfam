@@ -1,0 +1,49 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy over SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            # если первый раз — клонируем
+            if [ ! -d "/home/hfam/engine/.git" ]; then
+              git clone git@github.com:YOUR_USER/YOUR_REPO.git /home/hfam
+            fi
+
+            cd /home/hfam
+
+            echo "📥 Обновляем код"
+            git reset --hard
+            git pull origin master
+
+            echo "📦 Собираем engine"
+            cd engine
+            npm ci
+            npm run build
+            pm2 restart engine || pm2 start npm --name "engine" -- run start
+
+            echo "🤖 Собираем telegram-bot"
+            cd ../telegram-bot
+            npm ci
+            npm run build
+            pm2 restart telegram-bot || pm2 start npm --name "telegram-bot" -- run start
+
+            echo "✅ Deploy completed!"
+          EOF
