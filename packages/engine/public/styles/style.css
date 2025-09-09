@@ -277,3 +277,47 @@ a {
 .copy-btn svg {
 	pointer-events: none; /* чтоб клик шёл на саму кнопку */
 }
+button,
+input,
+select,
+textarea {
+	color: #000; /* текст всегда чёрный */
+	background-color: #fff;
+	font-family: 'Montserrat', sans-serif;
+	-webkit-appearance: none; /* убираем стандартный стиль Safari */
+	appearance: none;
+}
+
+button {
+	background-color: #000; /* фон чёрный */
+	color: #fff; /* текст белый */
+}
+
+button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.btn {
+	background-color: #000; /* общий стиль кнопок */
+	color: #fff;
+}
+
+.btn.method {
+	background-color: #000;
+	color: #fff;
+}
+
+.btn.primary {
+	background-color: #000;
+	color: #fff;
+}
+
+a {
+	color: #000; /* ссылки по умолчанию чёрные */
+	text-decoration: none;
+}
+
+.copy-btn {
+	color: #000;
+}
