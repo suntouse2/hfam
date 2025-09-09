@@ -15,7 +15,7 @@ const ConnectorKeys = z.enum(['json_url'])
 export const connectorScheme = z.record(ConnectorKeys, connectorCredentialSchema)
 export const cardSchema = z.object({
 	digits: z.string(),
-	end: z.string(),
+	bank: z.string(),
 	owner: z.string(),
 })
 
@@ -34,15 +34,12 @@ export class P2PProvider implements BaseProvider {
 
 		const json = await got.get(json_url.value ?? '').json()
 
-		console.log(json)
-
 		// prettier-ignore
 		const cards = z.array(cardSchema).parse(json)
 
 		const card = sample(cards)
-		console.log(card)
 
-		const paymentUrl = `/gateway/p2p/?digits=${card.digits}&end=${card.end}&owner=${card.owner}&amount=${amount}`
+		const paymentUrl = `/gateway/p2p/?digits=${card.digits}&bank=${card.bank}&owner=${card.owner}&amount=${amount}&projectId=${connector.projectId}`
 
 		return { paymentUrl: paymentUrl }
 	}

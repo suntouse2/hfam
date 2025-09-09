@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Project {
-  id         Int         @id @default(autoincrement())
-  name       String
-  domains    Domain[]
-  payments   Payment[]
-  connectors Connector[]
-  methods    Method[]
+  id          Int         @id @default(autoincrement())
+  name        String
+  tgSupportId String      @default("")
+  domains     Domain[]
+  payments    Payment[]
+  connectors  Connector[]
+  methods     Method[]
 
   @@map("projects")
 }

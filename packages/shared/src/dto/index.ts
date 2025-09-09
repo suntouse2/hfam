@@ -8,6 +8,7 @@ export type ProviderDTO = {
 export type ProjectDTO = {
 	name: string
 	id: number
+	tgSupportId: string
 	methods: MethodDTO[]
 }
 export type DomainDTO = {

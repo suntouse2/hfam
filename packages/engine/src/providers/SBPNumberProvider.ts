@@ -34,8 +34,6 @@ export class SBPNumberProvider implements BaseProvider {
 
 		const json = await got.get(json_url.value ?? '').json()
 
-		console.log(json)
-
 		// prettier-ignore
 		const numbers = z.array(numberSchema).parse(json)
 
@@ -46,6 +44,7 @@ export class SBPNumberProvider implements BaseProvider {
 			amount: String(amount),
 			owner,
 			bank,
+			projectId: String(connector.projectId),
 		})
 
 		const paymentUrl = `/gateway/sbpnumber/?${params.toString()}`

@@ -24,7 +24,7 @@ export class TRCProvider implements BaseProvider {
 		const { connector, amount } = request
 		const { trc_wallet } = connectorScheme.parse(connector.schema)
 
-		const paymentUrl = `/gateway/trc/?wallet=${trc_wallet.value}&amount=${amount}`
+		const paymentUrl = `/gateway/trc/?wallet=${trc_wallet.value}&amount=${amount}&projectId=${connector.projectId}`
 
 		return { paymentUrl: paymentUrl }
 	}

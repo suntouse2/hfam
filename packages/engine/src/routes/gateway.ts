@@ -19,10 +19,12 @@ gateway.post('/', async (req, res) => {
 		minAmount: gateway.amount,
 		maxAmount: gateway.amount,
 	})
+	const project = await projectsService.getProject(gateway.projectId)
+	const supportId = project.tgSupportId
 
 	const parsed = methodClientSchema.parse(methods)
-	console.log(parsed)
-	res.render('pay', { gateway, methods: parsed })
+
+	res.render('pay', { gateway, methods: parsed, supportId })
 })
 gateway.get('/', async (req, res) => {
 	const gateway = gatewayGetParams.parse(req.query)
@@ -32,9 +34,11 @@ gateway.get('/', async (req, res) => {
 		minAmount: gateway.amount,
 		maxAmount: gateway.amount,
 	})
+	const project = await projectsService.getProject(gateway.projectId)
+	const supportId = project.tgSupportId
 	const parsed = methodClientSchema.parse(methods)
 
-	res.render('pay', { gateway, methods: parsed })
+	res.render('pay', { gateway, methods: parsed, supportId })
 })
 
 gateway.get('/:id/methods', async (req, res) => {
@@ -48,17 +52,26 @@ gateway.get('/:id/methods', async (req, res) => {
 gateway.get('/p2p', async (req, res) => {
 	const card = cardSchema.parse(req.query)
 	const amount = z.coerce.number().nonnegative().parse(req.query.amount)
-	res.render('p2p', { card, amount })
+	const projectId = z.coerce.number().nonnegative().parse(req.query.projectId)
+	const project = await projectsService.getProject(projectId)
+	const supportId = project.tgSupportId
+	res.render('p2p', { card, amount, supportId })
 })
 gateway.get('/sbpnumber', async (req, res) => {
 	const { number, owner, bank } = numberSchema.parse(req.query)
 	const amount = z.coerce.number().nonnegative().parse(req.query.amount)
-	res.render('sbpnumber', { number, amount, owner, bank })
+	const projectId = z.coerce.number().nonnegative().parse(req.query.projectId)
+	const project = await projectsService.getProject(projectId)
+	const supportId = project.tgSupportId
+	res.render('sbpnumber', { number, amount, owner, bank, supportId })
 })
 gateway.get('/trc', async (req, res) => {
 	const wallet = z.string().parse(req.query.wallet)
 	const amount = z.coerce.number().nonnegative().parse(req.query.amount)
-	res.render('trc', { wallet, amount })
+	const projectId = z.coerce.number().nonnegative().parse(req.query.projectId)
+	const project = await projectsService.getProject(projectId)
+	const supportId = project.tgSupportId
+	res.render('trc', { wallet, amount, supportId })
 })
 gateway.post('/pay', async (req, res) => {
 	const gateway = gatewayPayParams.parse(req.body)

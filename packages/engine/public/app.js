@@ -4,28 +4,21 @@ document.addEventListener('DOMContentLoaded', () => {
 	const arrow = toggleBtn ? toggleBtn.querySelector('.arrow') : null
 	const payForm = document.getElementById('pay-form')
 	const main = document.querySelector('.main')
+	const copyButtons = document.querySelectorAll('.copy-btn')
 
 	const copyIcons = document.querySelectorAll('.copy-icon')
 
-	copyIcons.forEach(icon => {
-		icon.addEventListener('click', () => {
-			const text = icon.parentElement.querySelector('b').textContent.trim()
-			navigator.clipboard.writeText(
-				text
-					.trim()
-					.replace(/[\s\n]+/g, '')
-					.replace('₽', '')
-			)
+	copyButtons.forEach(btn => {
+		btn.addEventListener('click', () => {
+			const value = btn.dataset.copyValue
+			if (!value) return
 
-			const parent = icon.parentElement
-			const svg = icon
-			icon.remove()
-			const span = document.createElement('span')
-			span.innerHTML = '✅'
-			parent.appendChild(span)
+			navigator.clipboard.writeText(value)
+
+			const icon = btn.innerHTML
+			btn.innerHTML = '✅'
 			setTimeout(() => {
-				span.remove()
-				parent.appendChild(svg)
+				btn.innerHTML = icon
 			}, 1000)
 		})
 	})

@@ -21,9 +21,10 @@ export async function viewProject(projectId: ProjectDTO['id']) {
 	const kb = new InlineKeyboard()
 		.text('🔗 Домены', `domains`)
 		.text('🌐 Провайдеры', `connectors`)
-
 		.row()
 		.text('💳 Методы', 'methods')
+		.row()
+		.text(`🤖 ID Поддержки: ${project.tgSupportId}`, `project:configure:tgSupportId`)
 		.row()
 		.text('⛔ Удалить проект', `project:delete`)
 		.row()
