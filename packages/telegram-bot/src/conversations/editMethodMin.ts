@@ -22,6 +22,7 @@ export default async function editMethodMin(
 	await ctx.api.deleteMessage(sent.chat.id, sent.message_id)
 
 	const data = response.message.text
+	await response.deleteMessage()
 	if (data === '-') {
 		await conversation.external(() =>
 			methodsApi.updateMethod(methodId, { minAmount: null })

@@ -161,7 +161,89 @@ a {
 .arrow.right {
 	transform: rotate(-90deg);
 }
-.main.loading {
+.main.load {
 	opacity: 0.2;
 	pointer-events: none;
+}
+
+.mt-1 {
+	margin-top: 0.2rem;
+}
+.mt-2 {
+	margin-top: 0.5rem;
+}
+.mt-4 {
+	margin-top: 1rem;
+}
+.mt-8 {
+	margin-top: 2rem;
+}
+.help {
+	font-size: 0.75rem;
+	color: #666;
+}
+.loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 30px;
+	height: 30px;
+	background: transparent;
+	border: 3px solid #ddd;
+	border-radius: 999px;
+	position: relative;
+	animation: spin 1s linear infinite;
+}
+.loading::after {
+	content: '';
+	width: 10px;
+	height: 20px;
+	position: absolute;
+	top: -10px;
+	background: #fff;
+}
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.flex {
+	display: flex;
+}
+.flex-col {
+	flex-direction: column;
+}
+.justify-center {
+	justify-content: center;
+}
+.items-center {
+	align-items: center;
+}
+.gap-2 {
+	gap: 0.5rem;
+}
+.row > span {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.row-col {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2px;
+	font-size: 12px;
+}
+
+.copy-icon {
+	opacity: 0.3;
+	cursor: pointer;
+}
+.copy-icon.copied {
+	opacity: 1;
+}
+.copy-button {
+	margin-top: 5px;
 }

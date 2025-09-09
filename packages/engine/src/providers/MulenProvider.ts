@@ -25,7 +25,7 @@ export const callbackScheme = z.object({
 export class MulenProvider implements BaseProvider {
 	async callback({ request, connector }: ProviderCallback): Promise<ProviderResponse> {
 		const { api_key } = connectorScheme.parse(connector.schema)
-		const auth = request.headers.get('Authorization')
+		const auth = request.headers['authorization']
 
 		if (!auth || !auth.startsWith('Bearer ')) {
 			throw ErrorAPI.badRequest('Missing or invalid Authorization header')

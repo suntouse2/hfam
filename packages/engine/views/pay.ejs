@@ -10,7 +10,9 @@
 		<main class="main">
 			<div class="box">
 				<button class="down" id="toggle-info">
-					<span class="text"><%= gateway.amount %> ₽</span>
+					<span class="text"
+						><%= Number(gateway.amount).toLocaleString('ru-RU') %> ₽</span
+					>
 					<img src="/static/icons/down.svg" class="arrow" />
 				</button>
 				<div class="info-wrapper">
@@ -52,8 +54,9 @@
 						>
 							<% if (method.imageSrc) { %>
 							<img src="<%= method.imageSrc %>" alt="method icon" />
-							<% } %>
+							<% } %> <% if (method.showLabel) { %>
 							<span><%= method.label %></span>
+							<% } %>
 						</button>
 						<% }) %>
 					</div>

@@ -6,11 +6,14 @@
 		"outDir": "dist",
 		"rootDir": "src",
 		"declaration": true,
+		"emitDeclarationOnly": true,
 		"declarationMap": true,
 		"strict": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"composite": true
 	},
-	"include": ["src"]
+	"include": ["src"],
+	"exclude": ["dist", "node_modules"]
 }

@@ -1,6 +1,7 @@
 import type { ConnectorDTO } from '@hfam/shared/dto/index'
 import type { PaymentStatus } from '@prisma/client'
-export type { Request } from 'express'
+import type { Request } from 'express'
+
 export interface ProviderRequest {
 	connector: ConnectorDTO
 	amount: number

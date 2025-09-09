@@ -13,11 +13,18 @@ type MethodsFindPayload = z.infer<typeof methodsFindSchema>
 
 export const methodsService = {
 	async getMethods(filters: MethodsFindPayload): Promise<MethodDTO[]> {
+		const { minAmount, maxAmount, ...rest } = filters
+
 		const methods = await prisma.method.findMany({
-			where: filters,
+			where: { ...rest },
 			include: { project: true, connector: true },
 		})
-		return methods as MethodDTO[]
+
+		return methods.filter(
+			m =>
+				(minAmount == null || m.minAmount == null || m.minAmount <= minAmount) &&
+				(maxAmount == null || m.maxAmount == null || m.maxAmount >= maxAmount)
+		) as MethodDTO[]
 	},
 	async getMethod(id: MethodDTO['id']): Promise<MethodDTO> {
 		const method = await prisma.method.findUnique({

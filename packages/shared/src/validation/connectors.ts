@@ -6,10 +6,8 @@ export const connectorCredentialSchema = z.object({
 })
 
 export const connectorSchemaSchema = z.record(
-	z
-		.string()
-		.max(64)
-		.regex(/^[a-z0-9_]+$/),
+	// prettier-ignore
+	z.string().max(64).regex(/^[a-z0-9_]+$/),
 	connectorCredentialSchema
 )
 

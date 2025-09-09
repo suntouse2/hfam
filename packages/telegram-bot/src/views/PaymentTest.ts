@@ -12,7 +12,9 @@ export default function viewPaymentTest(connectorStatuses: ConnectorStatus[]) {
 
 	connectorStatuses.forEach(c => {
 		lines.push(
-			`• ${c.connector.name} — ${c.status}\n${c.paymentUuid ? `🔑 ${c.paymentUuid}` : ''}`
+			`• ${c.connector.name} — ${c.status}\n${
+				c.paymentUuid ? `🔑 ${c.paymentUuid}` : ''
+			}\n`
 		)
 	})
 

@@ -12,6 +12,7 @@ import { handlePayCbLink } from '@/handlers/handlePayCbLink'
 import { ErrorAPI } from '@hfam/shared/helpers/error'
 
 const ConnectorKeys = z.enum(['esell_token'])
+
 export const connectorScheme = z.record(ConnectorKeys, connectorCredentialSchema)
 export const callbackScheme = z.object({
 	status: z.enum(['SUCCESS']),
@@ -20,6 +21,10 @@ export const callbackScheme = z.object({
 
 export class EsellProvider implements BaseProvider {
 	async callback({ request, connector }: ProviderCallback): Promise<ProviderResponse> {
+		const token = request.query.token
+		const { esell_token } = connectorScheme.parse(connector.schema)
+		if (token !== esell_token.value) throw ErrorAPI.badRequest('Invalid token')
+
 		const data = callbackScheme.parse(request.body)
 		if (data.status !== 'SUCCESS')
 			throw ErrorAPI.badRequest('Callback expected status=SUCCESS')
@@ -37,7 +42,7 @@ export class EsellProvider implements BaseProvider {
 			donate_url: esell_token.value,
 			amount: amount,
 			email: payload?.email ?? email({ domain: 'gmail.com' }),
-			callbackUrl: `${handlePayCbLink(connector.id)}`,
+			callbackUrl: `${handlePayCbLink(connector.id)}?token=${esell_token.value}`,
 		}
 
 		const request_link = 'https://esell.su/api/generatePaymentUrl'

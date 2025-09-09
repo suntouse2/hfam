@@ -5,6 +5,10 @@ import z from 'zod'
 import type { BaseProvider } from './BaseProvider'
 import { EsellProvider } from './EsellProvider'
 import { MulenProvider } from './MulenProvider'
+import { P2PProvider } from './P2PProvider'
+import { SBPNumberProvider } from './SBPNumberProvider'
+import { TRCProvider } from './TRCProvider'
+import { TGProvider } from './TgProvider'
 
 export const data: ProviderDTO[] = [
 	{
@@ -13,9 +17,7 @@ export const data: ProviderDTO[] = [
 		title: 'Esell',
 		methods: ['card'],
 		schema: {
-			esell_token: {
-				label: 'Esell TOKEN',
-			},
+			esell_token: { label: 'Esell TOKEN' },
 		},
 	},
 	{
@@ -24,22 +26,48 @@ export const data: ProviderDTO[] = [
 		title: 'MulenPay',
 		methods: ['sbp'],
 		schema: {
-			shop_id: {
-				label: 'ID Магазина',
-			},
-			secret_key: {
-				label: 'Секретный ключ',
-			},
-			api_key: {
-				label: 'API Ключ',
-			},
+			shop_id: { label: 'ID Магазина' },
+			secret_key: { label: 'Секретный ключ' },
+			api_key: { label: 'API Ключ' },
 		},
+	},
+	{
+		active: true,
+		key: 'p2p',
+		title: 'Перевод на карту',
+		methods: ['p2p'],
+		schema: { json_url: { label: 'JSON-URL' } },
+	},
+	{
+		active: true,
+		key: 'sbp_number',
+		title: 'SBP Номер',
+		methods: ['sbp_number'],
+		schema: { json_url: { label: 'JSON-URL' } },
+	},
+	{
+		active: true,
+		key: 'trc',
+		title: 'Tether USDT',
+		methods: ['trc'],
+		schema: { trc_wallet: { label: 'Кошелек TRC-20' } },
+	},
+	{
+		active: true,
+		key: 'tg',
+		title: 'Telegram',
+		methods: ['tg'],
+		schema: { tg_id: { label: 'TG ID' } },
 	},
 ] as const
 
 const instanceMap: Record<string, new () => BaseProvider> = {
 	esell: EsellProvider,
 	mulen: MulenProvider,
+	p2p: P2PProvider,
+	sbp_number: SBPNumberProvider,
+	trc: TRCProvider,
+	tg: TGProvider,
 }
 
 type ProviderFindPayload = z.infer<typeof providersFindSchema>

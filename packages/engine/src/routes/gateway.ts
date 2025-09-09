@@ -1,9 +1,11 @@
 import { handlePay } from '@/handlers/handlePay'
-import { domainsService } from '@/services/domainsService'
+import { cardSchema } from '@/providers/P2PProvider'
+import { numberSchema } from '@/providers/SBPNumberProvider'
 import { methodsService } from '@/services/methodsService'
 import { projectsService } from '@/services/projectService'
 import { ErrorAPI } from '@hfam/shared/helpers/error'
 import { gatewayGetParams, gatewayPayParams } from '@hfam/shared/validation/gateway'
+import { methodClientSchema } from '@hfam/shared/validation/methods'
 import { Router } from 'express'
 import z from 'zod'
 
@@ -11,47 +13,54 @@ export const gateway = Router()
 
 gateway.post('/', async (req, res) => {
 	const gateway = gatewayGetParams.parse(req.body)
-	const methods = await methodsService
-		.getMethods({ projectId: gateway.projectId, active: true })
-		.then(m =>
-			m.map(m => ({
-				id: m.id,
-				label: m.label,
-				imageSrc: m.imageSrc,
-				minAmount: m.minAmount,
-				maxAmount: m.maxAmount,
-			}))
-		)
-
-	const filteredMethods = methods.filter(m => {
-		if (m.minAmount) if (m.minAmount > gateway.amount) return false
-		if (m.maxAmount) if (m.maxAmount < gateway.amount) return false
-		return true
+	const methods = await methodsService.getMethods({
+		projectId: gateway.projectId,
+		active: true,
+		minAmount: gateway.amount,
+		maxAmount: gateway.amount,
 	})
 
-	res.render('pay', { gateway, filteredMethods })
+	const parsed = methodClientSchema.parse(methods)
+	console.log(parsed)
+	res.render('pay', { gateway, methods: parsed })
 })
 gateway.get('/', async (req, res) => {
 	const gateway = gatewayGetParams.parse(req.query)
-	const methods = await methodsService
-		.getMethods({ projectId: gateway.projectId, active: true })
-		.then(m => m.map(m => ({ id: m.id, label: m.label, imageSrc: m.imageSrc })))
+	const methods = await methodsService.getMethods({
+		projectId: gateway.projectId,
+		active: true,
+		minAmount: gateway.amount,
+		maxAmount: gateway.amount,
+	})
+	const parsed = methodClientSchema.parse(methods)
 
-	res.render('pay', { gateway, methods })
+	res.render('pay', { gateway, methods: parsed })
 })
 
 gateway.get('/:id/methods', async (req, res) => {
 	const id = z.coerce.number().nonnegative().parse(req.params.id)
-	const methods = await methodsService
-		.getMethods({ projectId: id, active: true })
-		.then(m => m.map(m => ({ id: m.id, label: m.label, imageSrc: m.imageSrc })))
+	const methods = await methodsService.getMethods({ projectId: id, active: true })
+	const parsed = methodClientSchema.parse(methods)
 
-	res.json(methods)
+	res.json(parsed)
 })
 
+gateway.get('/p2p', async (req, res) => {
+	const card = cardSchema.parse(req.query)
+	const amount = z.coerce.number().nonnegative().parse(req.query.amount)
+	res.render('p2p', { card, amount })
+})
+gateway.get('/sbpnumber', async (req, res) => {
+	const { number, owner, bank } = numberSchema.parse(req.query)
+	const amount = z.coerce.number().nonnegative().parse(req.query.amount)
+	res.render('sbpnumber', { number, amount, owner, bank })
+})
+gateway.get('/trc', async (req, res) => {
+	const wallet = z.string().parse(req.query.wallet)
+	const amount = z.coerce.number().nonnegative().parse(req.query.amount)
+	res.render('trc', { wallet, amount })
+})
 gateway.post('/pay', async (req, res) => {
-	console.log(req.body)
-
 	const gateway = gatewayPayParams.parse(req.body)
 	const project = await projectsService.getProject(gateway.projectId)
 	const method = await methodsService.getMethod(gateway.methodId)
@@ -65,7 +74,7 @@ gateway.post('/pay', async (req, res) => {
 		description: gateway.description,
 		domain: gateway.domain,
 		byProvider: method.byProvider,
-		payload: {},
+		payload: gateway.payload,
 	})
 
 	res.json(pay)

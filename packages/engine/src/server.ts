@@ -20,7 +20,7 @@ const __dirname = dirname(__filename)
 
 export const server = express()
 
-server.use(helmet())
+server.use(helmet({ contentSecurityPolicy: false }))
 
 server.use('/static', express.static(join(__dirname, '../public')))
 

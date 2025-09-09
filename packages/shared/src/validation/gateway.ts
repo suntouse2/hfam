@@ -15,5 +15,7 @@ export const gatewayPayParams = z.object({
 	amount: z.coerce.number().nonnegative(),
 	description: z.string(),
 	orderId: z.string().nonempty(),
+	// prettier-ignore
+	payload: z.record(z.string().max(64).regex(/^[a-z0-9_]+$/),z.string()).optional(),
 	domain: domain,
 })

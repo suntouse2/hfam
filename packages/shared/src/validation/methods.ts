@@ -18,6 +18,8 @@ export const methodsFindSchema = z.object({
 	connectorId: z.number().optional(),
 	active: z.coerce.boolean().optional(),
 	method: z.string().optional(),
+	minAmount: z.coerce.number().nullable().optional(),
+	maxAmount: z.coerce.number().nullable().optional(),
 })
 
 export const methodUpdateSchema = z.object({
@@ -31,3 +33,12 @@ export const methodUpdateSchema = z.object({
 	method: z.string().nullable().optional(),
 	showLabel: z.coerce.boolean().optional(),
 })
+
+export const methodClientSchema = z.array(
+	z.object({
+		id: z.coerce.number(),
+		label: z.string(),
+		imageSrc: z.string().nullable(),
+		showLabel: z.coerce.boolean(),
+	})
+)
