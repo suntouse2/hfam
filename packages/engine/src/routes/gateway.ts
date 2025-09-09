@@ -73,6 +73,7 @@ gateway.post('/pay', async (req, res) => {
 		amount: gateway.amount,
 		description: gateway.description,
 		domain: gateway.domain,
+		connectorId: method.connectorId,
 		byProvider: method.byProvider,
 		payload: gateway.payload,
 	})
