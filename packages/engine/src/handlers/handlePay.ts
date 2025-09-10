@@ -16,8 +16,11 @@ export const handlePay = async (payPayload: PayPayload) => {
 		payPayload
 
 	let connector: ConnectorDTO
-	if (connectorId) connector = await connectorService.getConnector(connectorId)
+	if (connectorId !== undefined)
+		connector = await connectorService.getConnector(connectorId)
 	else connector = await connectorService.balancer({ projectId, byProvider, method })
+
+	if (!connector.active) throw ErrorAPI.badRequest('connector is not active')
 
 	const domains = await domainsService.getDomains({ projectId })
 	if (!domains.some(m => m.value == domain)) throw ErrorAPI.badRequest('invalid domain')
