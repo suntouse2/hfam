@@ -52,16 +52,11 @@
 							name="methodId"
 							value="<%= method.id %>"
 						>
-							<div>
-								<% if (method.imageSrc) { %>
-								<img class="method-icon" src="<%= method.imageSrc %>" alt="method icon" />
-								<% } %>
-							</div>
-							<div>
-								<% if (method.showLabel) { %>
-								<span><%= method.label %></span>
-								<% } %>
-							</div>
+							<% if (method.imageSrc) { %>
+							<img class="method-icon" src="<%= method.imageSrc %>" alt="method icon" />
+							<% } %> <% if (method.showLabel) { %>
+							<span><%= method.label %></span>
+							<% } %>
 						</button>
 						<% }) %>
 					</div>
