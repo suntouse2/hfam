@@ -90,18 +90,31 @@ body {
 }
 
 .btn.method {
-	display: flex;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
 	align-items: center;
-	justify-content: center;
 	gap: 0.5rem;
 	background-color: #f0f2f5;
+	width: 100%;
+}
+
+.btn.method > div:nth-child(1) {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.btn.method > div:nth-child(2) {
+	display: flex;
+	justify-content: center;
+	width: 100%;
 }
 
 .btn.method .method-icon {
 	width: 30px;
 	height: 30px;
+	object-fit: cover;
+	object-position: center;
 }
-
 .btn.primary {
 	background-color: #007aff;
 	color: white;
