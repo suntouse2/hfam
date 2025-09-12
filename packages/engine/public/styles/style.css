@@ -114,10 +114,6 @@ body {
 	color: #666;
 	text-align: center;
 }
-a {
-	text-decoration: none;
-	color: rgb(40, 119, 255);
-}
 .down {
 	display: flex;
 	align-items: center;
@@ -319,8 +315,8 @@ button:disabled {
 }
 
 a {
-	color: #000; /* ссылки по умолчанию чёрные */
 	text-decoration: none;
+	color: rgb(40, 119, 255);
 }
 
 .copy-btn {
