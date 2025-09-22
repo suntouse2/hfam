@@ -1,1 +1,1 @@
-export const DOMAIN = 'https://sskassa.com'
+export const DOMAIN = 'https://360payments.biz'
