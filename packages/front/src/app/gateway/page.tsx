@@ -1,19 +1,18 @@
-import z from "zod";
 import PaymentForm from "@/components/PaymentForm";
 import PaymentHeader from "@/components/PaymentHeader";
 import PaymentSupport from "@/components/PaymentSupport";
 import { paramsSchema } from "@/z/z";
-import { domain } from "../../../../shared/src/helpers/domain";
 import { methodsApi } from "../../../api/methodsApi";
 import { projectsApi } from "../../../api/projectsApi";
 
 export default async function Home({
 	searchParams,
 }: {
-	searchParams: Record<string, string>;
+	searchParams: Promise<Record<string, string>>;
 }) {
+	const sp = await searchParams;
 	const { amount, description, domain, orderId, projectId } =
-		paramsSchema.parse(searchParams);
+		paramsSchema.parse(sp);
 
 	const methods = await methodsApi.getMethods({
 		projectId: projectId,

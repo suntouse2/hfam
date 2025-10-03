@@ -63,13 +63,15 @@ export default function PaymentForm({
 							handlePay(method.id);
 						}}
 						disabled={loading === String(method.id)}
-						className="flex items-center justify-center gap-4 rounded-xl bg-gray-100 px-4 h-10 font-medium hover:opacity-70 disabled:opacity-50"
+						className="flex items-center justify-center gap-2 rounded-xl bg-gray-100 px-4 h-10 font-medium hover:opacity-70 disabled:opacity-50 text-sm"
 					>
 						{method.imageSrc && (
 							<Image
+								width={20}
+								height={20}
 								src={method.imageSrc}
 								alt="method icon"
-								className="w-5 h-5"
+								className="w-5 h-5 object-contain"
 							/>
 						)}
 						{method.showLabel && <span>{method.label}</span>}

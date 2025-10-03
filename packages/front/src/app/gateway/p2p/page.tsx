@@ -1,6 +1,5 @@
 import z from "zod";
 import PaymentP2P from "@/components/PaymentP2P";
-import PaymentSbp from "@/components/PaymentSbp";
 import PaymentSupport from "@/components/PaymentSupport";
 import { paramsSchema } from "@/z/z";
 import { projectsApi } from "../../../../api/projectsApi";
@@ -8,9 +7,10 @@ import { projectsApi } from "../../../../api/projectsApi";
 export default async function SBP({
 	searchParams,
 }: {
-	searchParams: Record<string, string>;
+	searchParams: Promise<Record<string, string>>;
 }) {
-	const { amount, projectId } = paramsSchema.parse(searchParams);
+	const sp = await searchParams;
+	const { amount, projectId } = paramsSchema.parse(sp);
 
 	const { digits, bank, owner } = z
 		.object({
@@ -18,7 +18,7 @@ export default async function SBP({
 			bank: z.string(),
 			owner: z.string(),
 		})
-		.parse(searchParams);
+		.parse(sp);
 
 	const project = await projectsApi.getProject(projectId);
 

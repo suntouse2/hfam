@@ -7,9 +7,10 @@ import { projectsApi } from "../../../../api/projectsApi";
 export default async function SBP({
 	searchParams,
 }: {
-	searchParams: Record<string, string>;
+	searchParams: Promise<Record<string, string>>;
 }) {
-	const { amount, projectId } = paramsSchema.parse(searchParams);
+	const sp = await searchParams;
+	const { amount, projectId } = paramsSchema.parse(sp);
 
 	const { number, owner, bank } = z
 		.object({
@@ -17,7 +18,7 @@ export default async function SBP({
 			owner: z.string(),
 			bank: z.string(),
 		})
-		.parse(searchParams);
+		.parse(sp);
 
 	const project = await projectsApi.getProject(projectId);
 
