@@ -36,15 +36,17 @@ jobs:
               git reset --hard origin/master
             fi
 
-            echo "📦 Собираем пакеты"
+            echo "📦 Устанавливаем зависимости и билдим"
             cd "$APP_DIR"
-            npm install
+            npm ci
             npm run build
 
-            echo "🚀 Перезапуск pm2 процессов"
-            pm2 restart engine || pm2 start npm --name "engine" --workspace packages/engine -- run start
-            pm2 restart telegram-bot || pm2 start npm --name "telegram-bot" --workspace packages/telegram-bot -- run start
-            pm2 restart front || pm2 start npm --name "front" --workspace packages/front -- run start
+            echo "🚀 Перезапуск процессов через PM2"
+            # Если есть ecosystem.config.js в корне
+            pm2 startOrReload ecosystem.config.js --update-env
+
+            echo "💾 Сохраняем процессы PM2, чтобы пережили рестарт"
+            pm2 save
 
             echo "✅ Deploy completed!"
           EOF

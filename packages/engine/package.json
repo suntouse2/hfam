@@ -1,11 +1,13 @@
 {
+	"private": true,
 	"name": "@hfam/engine",
 	"version": "1.0.0",
 	"description": "",
 	"type": "module",
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
-		"build": "swc src -d dist --strip-leading-paths --config-file=swc.build.json",
+		"build": "npm run clean && swc src -d dist --strip-leading-paths --config-file=swc.build.json",
+		"clean": "rimraf dist",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit"
 	},
@@ -20,7 +22,6 @@
 		"chalk": "^5.6.0",
 		"date-fns": "^4.1.0",
 		"dotenv": "^17.2.1",
-		"error-stack-parser": "^2.1.4",
 		"express": "^5.1.0",
 		"got": "^14.4.8",
 		"helmet": "^8.1.0",
@@ -29,11 +30,8 @@
 		"qr-code-styling": "^1.9.2",
 		"remeda": "^2.30.0",
 		"source-map-support": "^0.5.21",
-		"stacktrace-js": "^2.0.2",
-		"tldts": "^7.0.12",
-		"tsx": "^4.20.5",
-		"uuid": "^12.0.0",
-		"zod": "^4.1.5"
+		"prisma": "^6.15.0",
+		"uuid": "^12.0.0"
 	},
 	"devDependencies": {
 		"@swc/cli": "^0.7.8",
@@ -45,8 +43,8 @@
 		"@types/lodash": "^4.17.20",
 		"@types/node": "^24.3.0",
 		"@types/uuid": "^10.0.0",
-		"prisma": "^6.15.0",
 		"rimraf": "^6.0.1",
-		"typescript": "^5.9.2"
+		"typescript": "^5.9.2",
+		"tsx": "^4.20.5"
 	}
 }

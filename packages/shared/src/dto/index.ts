@@ -1,72 +1,72 @@
 export type ProviderDTO = {
-	active: boolean
-	key: string
-	title: string
-	schema: Record<string, { label: string }>
-	methods: string[]
-}
+	active: boolean;
+	key: string;
+	title: string;
+	schema: Record<string, { label: string }>;
+	methods: string[];
+};
 export type ProjectDTO = {
-	name: string
-	id: number
-	tgSupportId: string
-	methods: MethodDTO[]
-}
+	name: string;
+	id: number;
+	tgSupportId: string;
+	methods: MethodDTO[];
+};
 export type DomainDTO = {
-	id: number
-	value: string
-	project: Omit<ProjectDTO, 'methods'>
-}
+	id: number;
+	value: string;
+	project: Omit<ProjectDTO, "methods">;
+};
 
 export type ConnectorDTO = {
-	name: string
-	id: number
-	schema: Record<string, { label: string; value?: string }>
-	project: Omit<ProjectDTO, 'methods'>
-	projectId: ProjectDTO['id']
-	byProvider: string
-	active: boolean
-	settings: object | null
-	bIndex: number
-	methods: MethodDTO[]
-}
+	name: string;
+	id: number;
+	schema: Record<string, { label: string; value?: string }>;
+	project: Omit<ProjectDTO, "methods">;
+	projectId: ProjectDTO["id"];
+	byProvider: string;
+	active: boolean;
+	settings: object | null;
+	bIndex: number;
+	methods: MethodDTO[];
+};
 
 export type PaymentDTO = {
-	id: string
-	orderId: string
-	method: string | null
-	projectId: number
-	connector: ConnectorDTO
-	status: 'CREATED' | 'PAID' | 'REFUND'
-	amount: number
-	payload: Record<string, string> | null
-	paymentId: string | null
-	paymentUrl: string | null
-	paymentQr: string | null
-	createdAt: Date
-	updatedAt: Date
-	description: string
-	hookWait: boolean
-	domain: string
-}
+	id: string;
+	orderId: string;
+	method: string | null;
+	projectId: number;
+	connector: ConnectorDTO;
+	status: "CREATED" | "PAID" | "REFUND";
+	amount: number;
+	payload: Record<string, string> | null;
+	paymentId: string | null;
+	paymentUrl: string | null;
+	paymentQr: string | null;
+	createdAt: Date;
+	updatedAt: Date;
+	description: string;
+	hookWait: boolean;
+	domain: string;
+};
 
 export type MethodDTO = {
-	id: number
-	label: string
-	imageSrc: string | null
-	active: boolean
-	method?: string
-	byProvider?: string
-	connector?: ConnectorDTO
-	connectorId?: ConnectorDTO['id']
-	project: Omit<ProjectDTO, 'methods'>
-	projectId: ProjectDTO['id']
-	minAmount?: number
-	maxAmount?: number
-	showLabel?: boolean
-}
+	id: number;
+	label: string;
+	imageSrc: string | null;
+	active: boolean;
+	method?: string;
+	byProvider?: string;
+	connector?: ConnectorDTO;
+	connectorId?: ConnectorDTO["id"];
+	project: Omit<ProjectDTO, "methods">;
+	projectId: ProjectDTO["id"];
+	minAmount?: number;
+	maxAmount?: number;
+	showLabel?: boolean;
+};
 
 export interface PaginationDTO<T> {
-	data: T[]
-	count: number
-	limit: number
+	data: T[];
+	count: number;
+	limit: number;
 }
