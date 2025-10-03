@@ -13,7 +13,7 @@ export const methodCreateSchema = z.object({
 })
 
 export const methodsFindSchema = z.object({
-	projectId: z.number().nonnegative().optional(),
+	projectId: z.coerce.number().nonnegative().optional(),
 	byProvider: z.string().optional(),
 	connectorId: z.number().optional(),
 	active: z.coerce.boolean().optional(),

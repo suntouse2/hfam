@@ -6,7 +6,6 @@ import type {
 	ProviderResponse,
 } from './BaseProvider'
 import { connectorCredentialSchema } from '@hfam/shared/validation/connectors'
-import email from '@fakerjs/email'
 import got from 'got'
 import { ErrorAPI } from '@hfam/shared/helpers/error'
 import crypto from 'crypto'

@@ -44,6 +44,7 @@ jobs:
             echo "🚀 Перезапуск pm2 процессов"
             pm2 restart engine || pm2 start npm --name "engine" --workspace packages/engine -- run start
             pm2 restart telegram-bot || pm2 start npm --name "telegram-bot" --workspace packages/telegram-bot -- run start
+            pm2 restart front || pm2 start npm --name "front" --workspace packages/front -- run start
 
             echo "✅ Deploy completed!"
           EOF

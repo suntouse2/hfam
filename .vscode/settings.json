@@ -1,3 +1,23 @@
 {
-	"cSpell.words": ["Esell", "hfam", "hfont", "Mulen", "prismify", "sbpnumber", "Wata"]
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit"
+	},
+	"editor.defaultFormatter": "biomejs.biome",
+	"[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[typescriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"cSpell.words": [
+		"adddocs",
+		"arrowdown",
+		"CHEATSDB",
+		"ezod",
+		"fapi",
+		"managment",
+		"murad",
+		"pkce",
+		"svgs"
+	]
 }

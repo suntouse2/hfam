@@ -7,6 +7,10 @@
 		"build:shared": "npm run build -w @hfam/shared",
 		"build:engine": "npm run build -w @hfam/engine",
 		"build:bot": "npm run build -w @hfam/telegram-bot",
-		"build": "npm run build:shared && npm run build:engine && npm run build:bot"
+		"build:front": "npm run build -w @hfam/front",
+		"build": "npm run build:shared && npm run build:engine && npm run build:bot && npm run build:front"
+	},
+	"devDependencies": {
+		"dotenv-cli": "^10.0.0"
 	}
 }

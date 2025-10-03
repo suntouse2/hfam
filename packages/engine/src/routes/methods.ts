@@ -10,7 +10,7 @@ import z from 'zod'
 export const methods = Router()
 
 methods.get('/', async (req, res) => {
-	const filters = methodsFindSchema.parse(req.params)
+	const filters = methodsFindSchema.parse(req.query)
 	const methods = await methodsService.getMethods(filters)
 	res.json(methods)
 })

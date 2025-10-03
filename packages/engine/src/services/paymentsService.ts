@@ -1,5 +1,6 @@
 import prisma from '@/prisma'
 import type { PaymentDTO } from '@hfam/shared/dto/index'
+import { ErrorAPI } from '@hfam/shared/helpers/error'
 import type {
 	paymentCreateSchema,
 	paymentFindSchema,
@@ -16,9 +17,15 @@ export const paymentsService = {
 		const payment = await prisma.payment.create({ data: payload })
 		return payment as PaymentDTO
 	},
-	//prettier-ignore
-	async updatePayment
-	(id: PaymentDTO['id'],payload: PaymentUpdatePayload): Promise<PaymentDTO> {
+	async getPaymentsByPaymentId(paymentId: PaymentDTO['paymentId']): Promise<PaymentDTO> {
+		if (!paymentId) throw ErrorAPI.badRequest('paymentId is required')
+		const payment = await prisma.payment.findUnique({ where: { paymentId } })
+		return payment as PaymentDTO
+	},
+	async updatePayment(
+		id: PaymentDTO['id'],
+		payload: PaymentUpdatePayload
+	): Promise<PaymentDTO> {
 		const payment = await prisma.payment.update({ where: { id }, data: payload })
 		return payment as PaymentDTO
 	},

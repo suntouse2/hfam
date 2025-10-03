@@ -9,6 +9,7 @@ import { P2PProvider } from './P2PProvider'
 import { SBPNumberProvider } from './SBPNumberProvider'
 import { TRCProvider } from './TRCProvider'
 import { TGProvider } from './TgProvider'
+import { AntilopayProvider } from './AntilopayProvider'
 
 export const data: ProviderDTO[] = [
 	{
@@ -59,6 +60,18 @@ export const data: ProviderDTO[] = [
 		methods: ['tg'],
 		schema: { tg_id: { label: 'TG ID' } },
 	},
+	{
+		active: true,
+		key: 'antilopay',
+		title: 'Antilopay',
+		methods: ['sbp'],
+		schema: {
+			project_id: { label: 'ID Проекта' },
+			secret_id: { label: 'Secret ID' },
+			secret_key: { label: 'Secret Key' },
+			callback_key: { label: 'Public Key (For callback)' },
+		},
+	},
 ] as const
 
 const instanceMap: Record<string, new () => BaseProvider> = {
@@ -68,6 +81,7 @@ const instanceMap: Record<string, new () => BaseProvider> = {
 	sbp_number: SBPNumberProvider,
 	trc: TRCProvider,
 	tg: TGProvider,
+	antilopay: AntilopayProvider,
 }
 
 type ProviderFindPayload = z.infer<typeof providersFindSchema>
