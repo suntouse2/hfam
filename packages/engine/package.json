@@ -9,7 +9,8 @@
 		"build": "npm run clean && swc src -d dist --strip-leading-paths --config-file=swc.build.json",
 		"clean": "rimraf dist",
 		"start": "node dist/index.js",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"migrate:deploy": "prisma migrate deploy"
 	},
 	"keywords": [],
 	"author": "Murad",
