@@ -34,6 +34,7 @@ model Method {
   minAmount   Int?
   maxAmount   Int?
   showLabel   Boolean    @default(true)
+  position    Int        @default(0)
 
   @@map("methods")
 }

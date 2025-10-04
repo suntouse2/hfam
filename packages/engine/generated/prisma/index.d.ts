@@ -2510,6 +2510,7 @@ export namespace Prisma {
     projectId: number | null
     minAmount: number | null
     maxAmount: number | null
+    position: number | null
   }
 
   export type MethodSumAggregateOutputType = {
@@ -2518,6 +2519,7 @@ export namespace Prisma {
     projectId: number | null
     minAmount: number | null
     maxAmount: number | null
+    position: number | null
   }
 
   export type MethodMinAggregateOutputType = {
@@ -2532,6 +2534,7 @@ export namespace Prisma {
     minAmount: number | null
     maxAmount: number | null
     showLabel: boolean | null
+    position: number | null
   }
 
   export type MethodMaxAggregateOutputType = {
@@ -2546,6 +2549,7 @@ export namespace Prisma {
     minAmount: number | null
     maxAmount: number | null
     showLabel: boolean | null
+    position: number | null
   }
 
   export type MethodCountAggregateOutputType = {
@@ -2560,6 +2564,7 @@ export namespace Prisma {
     minAmount: number
     maxAmount: number
     showLabel: number
+    position: number
     _all: number
   }
 
@@ -2570,6 +2575,7 @@ export namespace Prisma {
     projectId?: true
     minAmount?: true
     maxAmount?: true
+    position?: true
   }
 
   export type MethodSumAggregateInputType = {
@@ -2578,6 +2584,7 @@ export namespace Prisma {
     projectId?: true
     minAmount?: true
     maxAmount?: true
+    position?: true
   }
 
   export type MethodMinAggregateInputType = {
@@ -2592,6 +2599,7 @@ export namespace Prisma {
     minAmount?: true
     maxAmount?: true
     showLabel?: true
+    position?: true
   }
 
   export type MethodMaxAggregateInputType = {
@@ -2606,6 +2614,7 @@ export namespace Prisma {
     minAmount?: true
     maxAmount?: true
     showLabel?: true
+    position?: true
   }
 
   export type MethodCountAggregateInputType = {
@@ -2620,6 +2629,7 @@ export namespace Prisma {
     minAmount?: true
     maxAmount?: true
     showLabel?: true
+    position?: true
     _all?: true
   }
 
@@ -2721,6 +2731,7 @@ export namespace Prisma {
     minAmount: number | null
     maxAmount: number | null
     showLabel: boolean
+    position: number
     _count: MethodCountAggregateOutputType | null
     _avg: MethodAvgAggregateOutputType | null
     _sum: MethodSumAggregateOutputType | null
@@ -2754,6 +2765,7 @@ export namespace Prisma {
     minAmount?: boolean
     maxAmount?: boolean
     showLabel?: boolean
+    position?: boolean
     connector?: boolean | Method$connectorArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["method"]>
@@ -2770,6 +2782,7 @@ export namespace Prisma {
     minAmount?: boolean
     maxAmount?: boolean
     showLabel?: boolean
+    position?: boolean
     connector?: boolean | Method$connectorArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["method"]>
@@ -2786,6 +2799,7 @@ export namespace Prisma {
     minAmount?: boolean
     maxAmount?: boolean
     showLabel?: boolean
+    position?: boolean
     connector?: boolean | Method$connectorArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["method"]>
@@ -2802,9 +2816,10 @@ export namespace Prisma {
     minAmount?: boolean
     maxAmount?: boolean
     showLabel?: boolean
+    position?: boolean
   }
 
-  export type MethodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "imageSrc" | "active" | "method" | "byProvider" | "connectorId" | "projectId" | "minAmount" | "maxAmount" | "showLabel", ExtArgs["result"]["method"]>
+  export type MethodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "imageSrc" | "active" | "method" | "byProvider" | "connectorId" | "projectId" | "minAmount" | "maxAmount" | "showLabel" | "position", ExtArgs["result"]["method"]>
   export type MethodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     connector?: boolean | Method$connectorArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -2836,6 +2851,7 @@ export namespace Prisma {
       minAmount: number | null
       maxAmount: number | null
       showLabel: boolean
+      position: number
     }, ExtArgs["result"]["method"]>
     composites: {}
   }
@@ -3272,6 +3288,7 @@ export namespace Prisma {
     readonly minAmount: FieldRef<"Method", 'Int'>
     readonly maxAmount: FieldRef<"Method", 'Int'>
     readonly showLabel: FieldRef<"Method", 'Boolean'>
+    readonly position: FieldRef<"Method", 'Int'>
   }
     
 
@@ -7201,7 +7218,8 @@ export namespace Prisma {
     projectId: 'projectId',
     minAmount: 'minAmount',
     maxAmount: 'maxAmount',
-    showLabel: 'showLabel'
+    showLabel: 'showLabel',
+    position: 'position'
   };
 
   export type MethodScalarFieldEnum = (typeof MethodScalarFieldEnum)[keyof typeof MethodScalarFieldEnum]
@@ -7470,6 +7488,7 @@ export namespace Prisma {
     minAmount?: IntNullableFilter<"Method"> | number | null
     maxAmount?: IntNullableFilter<"Method"> | number | null
     showLabel?: BoolFilter<"Method"> | boolean
+    position?: IntFilter<"Method"> | number
     connector?: XOR<ConnectorNullableScalarRelationFilter, ConnectorWhereInput> | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
   }
@@ -7486,6 +7505,7 @@ export namespace Prisma {
     minAmount?: SortOrderInput | SortOrder
     maxAmount?: SortOrderInput | SortOrder
     showLabel?: SortOrder
+    position?: SortOrder
     connector?: ConnectorOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
   }
@@ -7505,6 +7525,7 @@ export namespace Prisma {
     minAmount?: IntNullableFilter<"Method"> | number | null
     maxAmount?: IntNullableFilter<"Method"> | number | null
     showLabel?: BoolFilter<"Method"> | boolean
+    position?: IntFilter<"Method"> | number
     connector?: XOR<ConnectorNullableScalarRelationFilter, ConnectorWhereInput> | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
   }, "id">
@@ -7521,6 +7542,7 @@ export namespace Prisma {
     minAmount?: SortOrderInput | SortOrder
     maxAmount?: SortOrderInput | SortOrder
     showLabel?: SortOrder
+    position?: SortOrder
     _count?: MethodCountOrderByAggregateInput
     _avg?: MethodAvgOrderByAggregateInput
     _max?: MethodMaxOrderByAggregateInput
@@ -7543,6 +7565,7 @@ export namespace Prisma {
     minAmount?: IntNullableWithAggregatesFilter<"Method"> | number | null
     maxAmount?: IntNullableWithAggregatesFilter<"Method"> | number | null
     showLabel?: BoolWithAggregatesFilter<"Method"> | boolean
+    position?: IntWithAggregatesFilter<"Method"> | number
   }
 
   export type DomainWhereInput = {
@@ -7843,6 +7866,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
     connector?: ConnectorCreateNestedOneWithoutMethodsInput
     project: ProjectCreateNestedOneWithoutMethodsInput
   }
@@ -7859,6 +7883,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
   }
 
   export type MethodUpdateInput = {
@@ -7870,6 +7895,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
     connector?: ConnectorUpdateOneWithoutMethodsNestedInput
     project?: ProjectUpdateOneRequiredWithoutMethodsNestedInput
   }
@@ -7886,6 +7912,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type MethodCreateManyInput = {
@@ -7900,6 +7927,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
   }
 
   export type MethodUpdateManyMutationInput = {
@@ -7911,6 +7939,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type MethodUncheckedUpdateManyInput = {
@@ -7925,6 +7954,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type DomainCreateInput = {
@@ -8358,6 +8388,7 @@ export namespace Prisma {
     minAmount?: SortOrder
     maxAmount?: SortOrder
     showLabel?: SortOrder
+    position?: SortOrder
   }
 
   export type MethodAvgOrderByAggregateInput = {
@@ -8366,6 +8397,7 @@ export namespace Prisma {
     projectId?: SortOrder
     minAmount?: SortOrder
     maxAmount?: SortOrder
+    position?: SortOrder
   }
 
   export type MethodMaxOrderByAggregateInput = {
@@ -8380,6 +8412,7 @@ export namespace Prisma {
     minAmount?: SortOrder
     maxAmount?: SortOrder
     showLabel?: SortOrder
+    position?: SortOrder
   }
 
   export type MethodMinOrderByAggregateInput = {
@@ -8394,6 +8427,7 @@ export namespace Prisma {
     minAmount?: SortOrder
     maxAmount?: SortOrder
     showLabel?: SortOrder
+    position?: SortOrder
   }
 
   export type MethodSumOrderByAggregateInput = {
@@ -8402,6 +8436,7 @@ export namespace Prisma {
     projectId?: SortOrder
     minAmount?: SortOrder
     maxAmount?: SortOrder
+    position?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9380,6 +9415,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
     connector?: ConnectorCreateNestedOneWithoutMethodsInput
   }
 
@@ -9394,6 +9430,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
   }
 
   export type MethodCreateOrConnectWithoutProjectInput = {
@@ -9530,6 +9567,7 @@ export namespace Prisma {
     minAmount?: IntNullableFilter<"Method"> | number | null
     maxAmount?: IntNullableFilter<"Method"> | number | null
     showLabel?: BoolFilter<"Method"> | boolean
+    position?: IntFilter<"Method"> | number
   }
 
   export type ConnectorCreateWithoutMethodsInput = {
@@ -9721,6 +9759,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
     project: ProjectCreateNestedOneWithoutMethodsInput
   }
 
@@ -9735,6 +9774,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
   }
 
   export type MethodCreateOrConnectWithoutConnectorInput = {
@@ -9885,6 +9925,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
   }
 
   export type DomainUpdateWithoutProjectInput = {
@@ -9995,6 +10036,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
     connector?: ConnectorUpdateOneWithoutMethodsNestedInput
   }
 
@@ -10009,6 +10051,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type MethodUncheckedUpdateManyWithoutProjectInput = {
@@ -10022,6 +10065,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type MethodCreateManyConnectorInput = {
@@ -10035,6 +10079,7 @@ export namespace Prisma {
     minAmount?: number | null
     maxAmount?: number | null
     showLabel?: boolean
+    position?: number
   }
 
   export type MethodUpdateWithoutConnectorInput = {
@@ -10046,6 +10091,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
     project?: ProjectUpdateOneRequiredWithoutMethodsNestedInput
   }
 
@@ -10060,6 +10106,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
   export type MethodUncheckedUpdateManyWithoutConnectorInput = {
@@ -10073,6 +10120,7 @@ export namespace Prisma {
     minAmount?: NullableIntFieldUpdateOperationsInput | number | null
     maxAmount?: NullableIntFieldUpdateOperationsInput | number | null
     showLabel?: BoolFieldUpdateOperationsInput | boolean
+    position?: IntFieldUpdateOperationsInput | number
   }
 
 

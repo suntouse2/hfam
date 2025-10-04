@@ -137,7 +137,8 @@ exports.Prisma.MethodScalarFieldEnum = {
   projectId: 'projectId',
   minAmount: 'minAmount',
   maxAmount: 'maxAmount',
-  showLabel: 'showLabel'
+  showLabel: 'showLabel',
+  position: 'position'
 };
 
 exports.Prisma.DomainScalarFieldEnum = {

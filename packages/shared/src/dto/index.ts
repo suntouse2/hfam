@@ -54,6 +54,7 @@ export type MethodDTO = {
 	label: string;
 	imageSrc: string | null;
 	active: boolean;
+	position: number;
 	method?: string;
 	byProvider?: string;
 	connector?: ConnectorDTO;
