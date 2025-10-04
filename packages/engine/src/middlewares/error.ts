@@ -1,36 +1,41 @@
-import type { Request, Response, NextFunction } from 'express'
-import { json, ZodError } from 'zod'
-import { Prisma } from '@prisma/client'
-import { ErrorAPI } from '@hfam/shared/helpers/error'
-import { HTTPError } from 'got'
-import { gfs } from '@hfam/shared/utils/gfs'
+import { ErrorAPI } from "@hfam/shared/helpers/error";
+import { gfs } from "@hfam/shared/utils/gfs";
+import type { NextFunction, Request, Response } from "express";
+import { HTTPError } from "got";
+import { ZodError } from "zod";
+import { Prisma } from "../../generated/prisma";
 
-export function error(err: unknown, _req: Request, res: Response, _next: NextFunction) {
+export function error(
+	err: unknown,
+	_req: Request,
+	res: Response,
+	_next: NextFunction,
+) {
 	if (err instanceof ErrorAPI) {
-		return res.status(err.status).json({ error: err.message })
+		return res.status(err.status).json({ error: err.message });
 	}
 	if (err instanceof ZodError) {
-		console.log(err.issues)
-		const stack = gfs(err)
-		console.log(stack?.join('\n') ?? err.stack)
+		console.log(err.issues);
+		const stack = gfs(err);
+		console.log(stack?.join("\n") ?? err.stack);
 
 		return res.status(400).json({
-			error: 'validation error',
-		})
+			error: "validation error",
+		});
 	}
 
 	if (err instanceof Prisma.PrismaClientKnownRequestError) {
-		console.log(err)
+		console.log(err);
 
-		return res.status(400).json({ error: 'Invalid database request' })
+		return res.status(400).json({ error: "Invalid database request" });
 	}
 
 	if (err instanceof HTTPError) {
-		console.log(JSON.parse(err.response?.body))
+		console.log(JSON.parse(err.response?.body));
 
-		return res.status(400).json({ error: 'got request error' })
+		return res.status(400).json({ error: "got request error" });
 	}
-	console.log(err)
+	console.log(err);
 
-	return res.status(500).json({ error: 'Invalid request' })
+	return res.status(500).json({ error: "Invalid request" });
 }
