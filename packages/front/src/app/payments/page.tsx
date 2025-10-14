@@ -9,7 +9,7 @@ import "../tables.css";
 const FiltersSchema = z.object({
 	api_key: z.string().optional(),
 	page: z.coerce.number().default(1),
-	limit: z.coerce.number().default(10),
+	limit: z.coerce.number().default(15),
 	status: z.enum(["CREATED", "PAID", "REFUND"]).optional(),
 	projectId: z.coerce.number().optional(),
 	query: z.string().trim().optional(),
@@ -34,7 +34,7 @@ export default async function Payments({searchParams}: {searchParams:Promise<Fil
 	const filters = await FiltersSchema.parseAsync(params)
 	await checkApi();
 
-	const [payments,projects,domains] = await Promise.all([paymentsApi.getPayments(filters),projectsApi.getProjects(),domainsApi.getDomains(filters)])
+	const [payments,projects,domains] = await Promise.all([paymentsApi.getPayments(filters,filters.page,filters.limit),projectsApi.getProjects(),domainsApi.getDomains(filters)])
 
 	return <section className='p-4 mx-auto h-full  w-full max-w-[1500px]'>
 		<PaymentsList filters={filters} projects={projects} payments={payments} domains={domains}/>

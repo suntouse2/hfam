@@ -6,7 +6,9 @@ import type {
 	PaymentDTO,
 	ProjectDTO,
 } from "@hfam/shared/dto/index";
+import { useState } from "react";
 import type { FiltersSchemaType } from "@/app/payments/page";
+import Payment from "./Payment";
 
 type Props = {
 	filters: FiltersSchemaType;
@@ -21,24 +23,42 @@ export default function PaymentsList({
 	domains,
 	payments,
 }: Props) {
-	const project = (payment: PaymentDTO) => {
-		return projects.filter((p) => p.id === payment.projectId)[0];
-	};
-	const status = (status: PaymentDTO["status"]) => {
-		switch (status) {
-			case "CREATED":
-				return "🟡 Создан";
-			case "PAID":
-				return "🟢 Оплачен";
-			case "REFUND":
-				return "🔴 Возврат";
-			default:
-				return "";
-		}
+	const [cPayment, setCPayment] = useState<null | PaymentDTO>(null);
+
+	const project = (payment: PaymentDTO) =>
+		projects.find((p) => p.id === payment.projectId);
+
+	const status = (s: PaymentDTO["status"]) =>
+		s === "CREATED"
+			? "🟡 Создан"
+			: s === "PAID"
+				? "🟢 Оплачен"
+				: s === "REFUND"
+					? "🔴 Возврат"
+					: "";
+
+	const currentPage = filters.page ?? 1;
+	const totalPages = Math.ceil((payments.count || 0) / (filters.limit || 10));
+
+	const buildParams = (page: number) => {
+		const params = new URLSearchParams();
+		Object.entries(filters).forEach(([k, v]) => {
+			if (v === undefined || v === "" || v === null) return;
+			params.append(k, String(v));
+		});
+		params.set("page", String(page));
+		return params.toString();
 	};
 
 	return (
 		<div>
+			{cPayment && (
+				<div className="fixed flex justify-center items-center w-full h-full left-0 top-0 z-20 bg-black/40">
+					<div className="bg-white rounded-lg w-full max-w-[500px]">
+						<Payment payment={cPayment} paymentProject={project(cPayment)} />
+					</div>
+				</div>
+			)}
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
@@ -46,15 +66,15 @@ export default function PaymentsList({
 					const params = new URLSearchParams();
 
 					fd.forEach((v, k) => {
-						if (v instanceof File) return; // файлов нет — пропускаем
+						if (v instanceof File) return;
 						const s = String(v).trim();
-						if (s !== "") params.append(k, s); // только непустые
+						if (s !== "") params.append(k, s);
 					});
 
 					window.location.search = params.toString();
 				}}
 				method="GET"
-				className="flex gap-2 mb-4"
+				className="flex flex-wrap gap-2 mb-4"
 			>
 				<input
 					type="text"
@@ -63,35 +83,32 @@ export default function PaymentsList({
 					className="border rounded-sm p-2"
 					defaultValue={filters.query ?? ""}
 				/>
-				<div className="flex flex-col">
-					<select
-						name="projectId"
-						defaultValue={filters.projectId?.toString() ?? ""}
-						className="border h-full rounded-sm p-2"
-					>
-						<option value="">Проект</option>
-						{projects.map((p) => (
-							<option key={p.id} value={p.id}>
-								{p.name}
-							</option>
-						))}
-					</select>
-				</div>
 
-				<div className="flex flex-col">
-					<select
-						name="domain"
-						defaultValue={filters.domain?.toString() ?? ""}
-						className="border h-full rounded-sm p-2"
-					>
-						<option value="">Домен</option>
-						{domains.map((p) => (
-							<option key={p.id} value={p.value}>
-								{p.value}
-							</option>
-						))}
-					</select>
-				</div>
+				<select
+					name="projectId"
+					defaultValue={filters.projectId?.toString() ?? ""}
+					className="border h-full rounded-sm p-2"
+				>
+					<option value="">Проект</option>
+					{projects.map((p) => (
+						<option key={p.id} value={p.id}>
+							{p.name}
+						</option>
+					))}
+				</select>
+
+				<select
+					name="domain"
+					defaultValue={filters.domain ?? ""}
+					className="border h-full rounded-sm p-2"
+				>
+					<option value="">Домен</option>
+					{domains.map((d) => (
+						<option key={d.id} value={d.value}>
+							{d.value}
+						</option>
+					))}
+				</select>
 
 				<select
 					name="status"
@@ -103,6 +120,7 @@ export default function PaymentsList({
 					<option value="PAID">Оплачен</option>
 					<option value="REFUND">Возврат</option>
 				</select>
+
 				<input
 					type="date"
 					name="createdFrom"
@@ -123,56 +141,95 @@ export default function PaymentsList({
 							: ""
 					}
 					className="border rounded-sm p-2"
-					placeholder="от даты"
+					placeholder="до даты"
 				/>
+
 				<button
 					type="submit"
-					className="cursor-pointer border px-4 rounded-sm bg-black  !text-white"
+					className="cursor-pointer border px-4 rounded-sm bg-black !text-white"
 				>
 					Фильтровать
 				</button>
 			</form>
-			<table className="w-full text-sm">
-				<thead>
+
+			{/* таблица */}
+			<table className="w-full text-sm border-collapse border border-gray-300">
+				<thead className="bg-gray-100">
 					<tr>
-						<th>🆔 ID</th>
-						<th>📦 ID Заказа</th>
-						<th>🏢 Проект</th>
-						<th>💳 Метод</th>
-						<th>📊 Статус</th>
-						<th>💰 Сумма</th>
-						<th>🌐 Домен</th>
-						<th>🕒 Создан</th>
-						<th>📝 Описание</th>
+						<th className="border p-2">🆔 ID</th>
+						<th className="border p-2">📦 ID Заказа</th>
+						<th className="border p-2">🏢 Проект</th>
+						<th className="border p-2">💳 Метод</th>
+						<th className="border p-2">📊 Статус</th>
+						<th className="border p-2">💰 Сумма</th>
+						<th className="border p-2">🌐 Домен</th>
+						<th className="border p-2">🕒 Создан</th>
+						<th className="border p-2">📝 Описание</th>
 					</tr>
 				</thead>
 				<tbody>
 					{payments.data.map((p) => (
-						<tr key={p.id}>
-							<td>
-								<a
-									className="!text-blue-500 underline"
-									href={`/payments/${p.id}`}
+						<tr
+							key={p.id}
+							className="odd:bg-white even:bg-gray-50 hover:bg-gray-100"
+						>
+							<td className="border p-2">
+								<button
+									type="button"
+									className="text-blue-600 underline"
+									onClick={() => setCPayment(p)}
 								>
 									{p.id}
-								</a>
+								</button>
 							</td>
-							<td>{p.paymentId}</td>
-							<td>{project(p).name}</td>
-							<td>{p.method}</td>
-							<td>{status(p.status)}</td>
-							<td>{p.domain}</td>
-							<td>
+							<td className="border p-2">{p.paymentId}</td>
+							<td className="border p-2">{project(p)?.name ?? "-"}</td>
+							<td className="border p-2">{p.method ?? "-"}</td>
+							<td className="border p-2">{status(p.status)}</td>
+							<td className="border p-2">
+								{p.amount.toLocaleString("ru-RU")} ₽
+							</td>
+							<td className="border p-2">{p.domain}</td>
+							<td className="border p-2">
 								{new Date(p.createdAt)
 									.toISOString()
 									.replace("T", " ")
 									.slice(0, 19)}
 							</td>
-							<td>{p.description}</td>
+							<td className="border p-2">{p.description ?? "—"}</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
+
+			{/* пагинация */}
+			<div className="flex justify-between items-center mt-4 text-sm">
+				{currentPage > 1 ? (
+					<a
+						href={`?${buildParams(currentPage - 1)}`}
+						className="text-blue-600 underline"
+					>
+						← Назад
+					</a>
+				) : (
+					<span />
+				)}
+
+				<span>
+					Страница {currentPage} из {totalPages || 1}
+				</span>
+
+				{currentPage < totalPages ? (
+					<a
+						href={`?${buildParams(currentPage + 1)}`}
+						className="text-blue-600 underline"
+					>
+						Далее →
+					</a>
+				) : (
+					<span />
+				)}
+			</div>
 		</div>
 	);
 }
