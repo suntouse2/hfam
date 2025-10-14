@@ -16,4 +16,7 @@ export const paymentsApi = {
 			.get("payments", { searchParams })
 			.json<PaginationDTO<PaymentDTO>>();
 	},
+	async getPayment(id: PaymentDTO["id"]) {
+		return api.get(`payments/${id}`).json<PaymentDTO>();
+	},
 };

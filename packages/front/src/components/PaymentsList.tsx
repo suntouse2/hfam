@@ -149,7 +149,14 @@ export default function PaymentsList({
 				<tbody>
 					{payments.data.map((p) => (
 						<tr key={p.id}>
-							<td>{p.id}</td>
+							<td>
+								<a
+									className="!text-blue-500 underline"
+									href={`/payments/${p.id}`}
+								>
+									{p.id}
+								</a>
+							</td>
 							<td>{p.paymentId}</td>
 							<td>{project(p).name}</td>
 							<td>{p.method}</td>
