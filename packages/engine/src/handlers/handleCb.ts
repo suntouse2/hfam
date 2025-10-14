@@ -13,5 +13,7 @@ export const handleCb = async (request: Request, connectorId: number) => {
 	if (paymentId && status === "PAID") {
 		const payment = await paymentsService.getPaymentsByPaymentId(paymentId);
 		await paymentsService.updatePayment(payment.id, { status: "PAID" });
+		return payment;
 	}
+	return null;
 };

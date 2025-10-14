@@ -13,7 +13,7 @@
 		"clean": "rimraf dist",
 		"start": "node dist/index.js",
 		"typecheck": "tsc --noEmit"
-	  },
+	},
 	"keywords": [],
 	"author": "Murad",
 	"license": "ISC",
@@ -28,6 +28,7 @@
 		"chalk": "^5.6.0",
 		"date-fns": "^4.1.0",
 		"dotenv": "^17.2.1",
+		"express": "^5.1.0",
 		"got": "^14.4.8",
 		"grammy": "^1.38.1",
 		"nanoid": "^5.1.5",
@@ -40,7 +41,7 @@
 		"@swc/core": "^1.13.5",
 		"@types/node": "^24.3.0",
 		"rimraf": "^6.0.1",
-		"typescript": "^5.9.2",
-		"tsx": "^4.20.5"
+		"tsx": "^4.20.5",
+		"typescript": "^5.9.2"
 	}
 }
