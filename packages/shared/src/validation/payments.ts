@@ -49,8 +49,9 @@ export const paymentFindSchema = z.object({
 	status: z
 		.enum(["CREATED", "PAID", "REFUND"] as PaymentDTO["status"][])
 		.optional(),
-	createdAt: z.string().date().optional(),
-	updatedAt: z.string().date().optional(),
+	createdFrom: z.string().optional(),
+	createdTo: z.string().optional(),
+	updatedAt: z.string().optional(),
 	domain: domain.optional(),
 	query: z.string().optional(),
 });

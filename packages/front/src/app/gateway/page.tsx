@@ -1,3 +1,5 @@
+"use server";
+
 import PaymentForm from "@/components/PaymentForm";
 import PaymentHeader from "@/components/PaymentHeader";
 import PaymentSupport from "@/components/PaymentSupport";

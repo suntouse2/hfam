@@ -1,3 +1,5 @@
+"use server";
+
 import z from "zod";
 import PaymentSupport from "@/components/PaymentSupport";
 import PaymentTRC from "@/components/PaymentTRC";
