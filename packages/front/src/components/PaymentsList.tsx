@@ -53,8 +53,18 @@ export default function PaymentsList({
 	return (
 		<div>
 			{cPayment && (
-				<div className="fixed flex justify-center items-center w-full h-full left-0 top-0 z-20 bg-black/40">
-					<div className="bg-white rounded-lg w-full max-w-[500px]">
+				// biome-ignore lint/a11y/noStaticElementInteractions: fuck off
+				// biome-ignore lint/a11y/useKeyWithClickEvents: fuck off
+				<div
+					className="fixed flex justify-center items-center w-full h-full left-0 top-0 z-20 bg-black/40"
+					onClick={() => setCPayment(null)} // закрыть при клике по фону
+				>
+					{/** biome-ignore lint/a11y/noStaticElementInteractions: fuck off */}
+					{/** biome-ignore lint/a11y/useKeyWithClickEvents:fuck off */}
+					<div
+						className="bg-white rounded-lg w-full max-w-[500px]"
+						onClick={(e) => e.stopPropagation()} // клик внутри не закрывает
+					>
 						<Payment payment={cPayment} paymentProject={project(cPayment)} />
 					</div>
 				</div>
