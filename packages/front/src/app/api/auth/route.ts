@@ -8,7 +8,9 @@ export async function GET(req: Request) {
 		return NextResponse.json({ error: "Missing api_key" }, { status: 400 });
 	}
 
-	const res = NextResponse.redirect(new URL("/payments", req.url));
+	const res = NextResponse.redirect(
+		new URL(`${process.env.NEXT_PUBLIC_DOMAIN}/payments`),
+	);
 	res.cookies.set("token", api_key, {
 		httpOnly: true,
 		secure: true,
