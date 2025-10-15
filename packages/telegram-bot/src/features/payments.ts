@@ -65,7 +65,7 @@ payments.callbackQuery("payments:test", async (ctx) => {
 			const p = await payApi.pay({
 				domain: domains[0]?.value || "",
 				orderId: nanoid(),
-				amount: 100,
+				amount: 10,
 				description: "Тестовый платёж",
 				projectId,
 				connectorId: c.id,
