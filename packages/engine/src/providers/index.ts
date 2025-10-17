@@ -4,6 +4,7 @@ import type { providersFindSchema } from "@hfam/shared/validation/provider";
 import z from "zod";
 import { AntilopayProvider } from "./AntilopayProvider";
 import type { BaseProvider } from "./BaseProvider";
+import { DALinkProvider } from "./DALinkProvider";
 import { DonationsAlertsProvider } from "./DonationAlertsProvider";
 import { EsellProvider } from "./EsellProvider";
 import { MulenProvider } from "./MulenProvider";
@@ -83,6 +84,16 @@ export const data: ProviderDTO[] = [
 			proxies_url: { label: "Ссылка на прокси" },
 		},
 	},
+	{
+		active: true,
+		key: "dalink",
+		title: "DALink",
+		methods: ["sbp"],
+		schema: {
+			id: { label: "ID Аккаунты" },
+			proxies_url: { label: "Ссылка на прокси" },
+		},
+	},
 ] as const;
 
 const instanceMap: Record<string, new () => BaseProvider> = {
@@ -94,6 +105,7 @@ const instanceMap: Record<string, new () => BaseProvider> = {
 	tg: TGProvider,
 	antilopay: AntilopayProvider,
 	donationalerts: DonationsAlertsProvider,
+	dalink: DALinkProvider,
 };
 
 type ProviderFindPayload = z.infer<typeof providersFindSchema>;
