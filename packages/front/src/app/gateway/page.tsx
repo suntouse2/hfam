@@ -18,7 +18,6 @@ export default async function Home({
 
 	const methods = await methodsApi.getMethods({
 		projectId: projectId,
-		active: false,
 		minAmount: amount,
 		maxAmount: amount,
 	});
