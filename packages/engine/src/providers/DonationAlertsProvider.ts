@@ -58,6 +58,7 @@ export class DonationsAlertsProvider implements BaseProvider {
 			throw ErrorAPI.badRequest("Proxy url not provided");
 
 		const proxies = await this.getProxyList(proxies_url.value);
+
 		let proxyAgent = this.getProxyAgent(
 			proxies[Math.floor(Math.random() * proxies.length)],
 		);
@@ -65,7 +66,7 @@ export class DonationsAlertsProvider implements BaseProvider {
 		try {
 			const createInvoice = await got
 				.post("https://www.donationalerts.com/api/v1/payin/invoice", {
-					agent: proxyAgent ? { https: proxyAgent } : undefined,
+					agent: { https: proxyAgent },
 					json: {
 						type: "donation",
 						amount,
