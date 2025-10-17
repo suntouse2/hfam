@@ -12,9 +12,7 @@ type DomainsFindPayload = z.infer<typeof domainsFindSchema>;
 export const domainsService = {
 	async getDomains(filters: DomainsFindPayload): Promise<DomainDTO[]> {
 		const domains = await prisma.domain.findMany({
-			where: {
-				projectId: 2,
-			},
+			where: filters,
 			include: { project: true },
 		});
 		return domains;
