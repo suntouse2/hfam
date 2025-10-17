@@ -72,7 +72,7 @@ export class DonationsAlertsProvider implements BaseProvider {
 						currency: "RUB",
 						user_id: id.value,
 						message_type: "text",
-						name: payload?.name ?? faker.internet.userName(),
+						name: payload?.name ?? faker.internet.username(),
 						donation_tts_voice_lang: "ru_RU",
 						donation_tts_voice_id: 1,
 						email: payload?.email ?? email({ domain: "gmail.com" }),
