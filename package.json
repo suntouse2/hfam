@@ -8,19 +8,18 @@
 		"dev:front": "dotenv -e .env.development -- npm run dev -w @hfam/front",
 		"dev:engine": "dotenv -e .env.development -- npm run dev -w @hfam/engine",
 		"dev:bot": "dotenv -e .env.development -- npm run dev -w @hfam/telegram-bot",
-
 		"build": "npm-run-all build:*",
 		"build:shared": "npm run build -w @hfam/shared",
 		"build:engine": "dotenv -e .env -- npm run build -w @hfam/engine && dotenv -e .env -- npm run migrate:deploy -w @hfam/engine",
 		"build:bot": "dotenv -e .env -- npm run build -w @hfam/telegram-bot",
 		"build:front": "dotenv -e .env -- npm run build -w @hfam/front",
-
 		"rebuild": "npm-run-all build restart:full",
 		"restart:full": "pm2 delete all && pm2 start ecosystem.config.js",
 		"start": "pm2 start ecosystem.config.js"
 	},
 	"dependencies": {
 		"@tanstack/react-table": "^8.21.3",
+		"hpagent": "^1.2.0",
 		"lodash": "^4.17.21",
 		"qs": "^6.14.0",
 		"react-hook-form": "^7.65.0",

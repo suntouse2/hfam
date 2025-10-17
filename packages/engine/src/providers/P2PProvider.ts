@@ -4,7 +4,6 @@ import got from "got";
 import z from "zod";
 import type {
 	BaseProvider,
-	ProviderCallback,
 	ProviderRequest,
 	ProviderResponse,
 } from "./BaseProvider";
@@ -27,10 +26,7 @@ export const callbackScheme = z.object({
 });
 
 export class P2PProvider implements BaseProvider {
-	async callback({
-		request,
-		connector,
-	}: ProviderCallback): Promise<ProviderResponse> {
+	async callback(): Promise<ProviderResponse> {
 		return {};
 	}
 	async create(request: ProviderRequest): Promise<ProviderResponse> {
