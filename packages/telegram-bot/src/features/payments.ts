@@ -23,6 +23,58 @@ payments.callbackQuery(/^payments:(\d+)$/, async (ctx) => {
 	await ctx.editMessageText(message, { reply_markup: kb, parse_mode: "HTML" });
 });
 
+payments.callbackQuery("payments:connector", async (ctx) => {
+	await ctx.answerCallbackQuery();
+	const { projectId, connectorId } = ctx.session;
+	if (!projectId || !connectorId) return ctx.reply("❌ Не выбран коннектор");
+
+	const domains = await domainsApi.getDomains({ projectId });
+	if (!domains.length) return ctx.reply("😔 Нет доступных доменов");
+
+	const connector = await connectorsApi.getConnector(connectorId);
+	if (!connector) return ctx.reply("❌ Коннектор не найден");
+
+	const status = "🔄 Создание платежа";
+	let paymentUuid: string | null = null;
+	let paymentUrl: string | null = null;
+
+	const update = async (text: string) => {
+		await ctx.editMessageText(
+			[
+				`🌐 <b>${connector.name}</b>`,
+				`Провайдер ID: ${connector.id}`,
+				`Статус: ${text}`,
+				paymentUrl ? `🔗 <a href="${paymentUrl}">Перейти к оплате</a>` : "",
+			]
+				.filter(Boolean)
+				.join("\n"),
+			{ parse_mode: "HTML" },
+		);
+	};
+
+	await update(status);
+
+	try {
+		const p = await payApi.pay({
+			domain: domains[0]?.value || "",
+			orderId: nanoid(),
+			amount: 10,
+			description: "Тестовый платёж",
+			projectId,
+			connectorId,
+		});
+		paymentUuid = p.id;
+		paymentUrl = p.paymentUrl;
+		await update("✅ Платёж создан");
+	} catch (e) {
+		const msg =
+			e instanceof HTTPError && e.response.body?.error
+				? e.response.body.error
+				: "Ошибка";
+		await update("❌ " + msg);
+	}
+});
+
 payments.callbackQuery("payments:test", async (ctx) => {
 	await ctx.answerCallbackQuery();
 	const { projectId } = ctx.session;
