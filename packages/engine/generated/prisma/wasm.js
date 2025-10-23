@@ -202,7 +202,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/suntouse2/Code/hfam/packages/engine/generated/prisma",
+      "value": "F:\\Code\\hfam\\packages\\engine\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -211,17 +211,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/suntouse2/Code/hfam/packages/engine/prisma/schema.prisma",
+    "sourceFilePath": "F:\\Code\\hfam\\packages\\engine\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.16.3",

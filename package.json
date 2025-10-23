@@ -11,6 +11,8 @@
 		"build": "npm-run-all build:*",
 		"build:shared": "npm run build -w @hfam/shared",
 		"build:engine": "dotenv -e .env -- npm run build -w @hfam/engine && dotenv -e .env -- npm run migrate:deploy -w @hfam/engine",
+		"migrate:deploy": "dotenv -e .env -- npm run migrate:deploy -w @hfam/engine",
+		"migrate:dev": "dotenv -e .env.development -- npm run migrate:dev -w @hfam/engine",
 		"build:bot": "dotenv -e .env -- npm run build -w @hfam/telegram-bot",
 		"build:front": "dotenv -e .env -- npm run build -w @hfam/front",
 		"rebuild": "npm-run-all build restart:full",
@@ -19,10 +21,16 @@
 	},
 	"dependencies": {
 		"@tanstack/react-table": "^8.21.3",
+		"dotenv": "^17.2.3",
 		"hpagent": "^1.2.0",
 		"lodash": "^4.17.21",
+		"lucide-react": "^0.546.0",
 		"qs": "^6.14.0",
 		"react-hook-form": "^7.65.0",
 		"zod": "^4.1.12"
+	},
+	"devDependencies": {
+		"cross-env": "^10.1.0",
+		"dotenv-cli": "^10.0.0"
 	}
 }

@@ -3,9 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --turbopack --port $FRONT_PORT",
+		"dev": "cross-env-shell \"next dev --turbopack --port $FRONT_PORT\"",
 		"build": "next build --turbopack",
-		"start": "next start --port $FRONT_PORT",
+		"start": "cross-env-shell \"next start --port $FRONT_PORT\"",
 		"lint": "biome check",
 		"format": "biome format --write"
 	},
