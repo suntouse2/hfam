@@ -12,6 +12,7 @@ import { P2PProvider } from "./P2PProvider";
 import { SBPNumberProvider } from "./SBPNumberProvider";
 import { TGProvider } from "./TgProvider";
 import { TRCProvider } from "./TRCProvider";
+import { UrlPayProvider } from "./UrlPayProvider";
 
 export const data: ProviderDTO[] = [
 	{
@@ -94,6 +95,17 @@ export const data: ProviderDTO[] = [
 			proxies_url: { label: "Ссылка на прокси" },
 		},
 	},
+	{
+		active: true,
+		key: "urlpay",
+		title: "UrlPay",
+		methods: ["sbp"],
+		schema: {
+			shop_id: { label: "ID Магазина" },
+			secret_key: { label: "Секретный ключ" },
+			api_key: { label: "API Ключ" },
+		},
+	},
 ] as const;
 
 const instanceMap: Record<string, new () => BaseProvider> = {
@@ -106,6 +118,7 @@ const instanceMap: Record<string, new () => BaseProvider> = {
 	antilopay: AntilopayProvider,
 	donationalerts: DonationsAlertsProvider,
 	dalink: DALinkProvider,
+	urlpay: UrlPayProvider,
 };
 
 type ProviderFindPayload = z.infer<typeof providersFindSchema>;
