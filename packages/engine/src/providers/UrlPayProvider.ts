@@ -17,8 +17,8 @@ export const connectorScheme = z.record(
 	connectorCredentialSchema,
 );
 export const callbackScheme = z.object({
-	id: z.number().nonnegative(),
-	amount: z.number(),
+	id: z.coerce.number().nonnegative(),
+	amount: z.coerce.number(),
 	currency: z.string(),
 	uuid: z.string(),
 	payment_status: z.enum(["success", "cancel"]),
