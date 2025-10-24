@@ -32,6 +32,9 @@ export class UrlPayProvider implements BaseProvider {
 		const { api_key } = connectorScheme.parse(connector.schema);
 		const auth = request.headers["authorization"];
 
+		console.log(request.headers);
+		console.log(request.body);
+
 		if (!auth || !auth.startsWith("Bearer ")) {
 			console.log("Missing or invalid Authorization header");
 
