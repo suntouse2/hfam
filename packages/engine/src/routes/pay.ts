@@ -1,3 +1,4 @@
+import { ErrorAPI } from "@hfam/shared/helpers/error";
 import { payCreateSchema } from "@hfam/shared/validation/pay";
 import { Router } from "express";
 import z from "zod";
@@ -31,6 +32,12 @@ pay.post("/", auth, async (req, res) => {
 
 pay.post("/callback/:connectorId", async (req, res) => {
 	console.log("прилетел лог коллбека");
+	const { token } = req.query;
+
+	if (token !== process.env.API_KEY) {
+		console.log("no passed token in query");
+		throw ErrorAPI.badRequest("No passed token in query");
+	}
 
 	const connectorId = z.coerce
 		.number()

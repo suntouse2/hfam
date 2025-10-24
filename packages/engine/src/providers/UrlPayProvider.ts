@@ -25,28 +25,7 @@ export const callbackScheme = z.object({
 });
 
 export class UrlPayProvider implements BaseProvider {
-	async callback({
-		request,
-		connector,
-	}: ProviderCallback): Promise<ProviderResponse> {
-		const { api_key } = connectorScheme.parse(connector.schema);
-		const auth = request.headers["authorization"];
-
-		console.log(request.headers);
-		console.log(request.body);
-
-		if (!auth || !auth.startsWith("Bearer ")) {
-			console.log("Missing or invalid Authorization header");
-
-			throw ErrorAPI.badRequest("Missing or invalid Authorization header");
-		}
-		const token = auth.replace("Bearer ", "");
-		if (token !== api_key.value) {
-			console.log("Invalid api key");
-
-			throw ErrorAPI.badRequest("Invalid API key");
-		}
-
+	async callback({ request }: ProviderCallback): Promise<ProviderResponse> {
 		const data = callbackScheme.parse(request.body);
 		if (data.payment_status !== "success") {
 			console.log("Callback expected status=success");
