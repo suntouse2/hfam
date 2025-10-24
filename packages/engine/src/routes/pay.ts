@@ -31,7 +31,7 @@ pay.post("/", auth, async (req, res) => {
 });
 
 pay.post("/callback/:connectorId", async (req, res) => {
-	console.log("прилетел лог коллбека");
+	console.log("прилетел лог коллбека 2");
 	const { token } = req.query;
 
 	if (token !== process.env.API_KEY) {
