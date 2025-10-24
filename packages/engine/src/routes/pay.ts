@@ -43,7 +43,7 @@ pay.post("/callback/:connectorId", async (req, res) => {
 		.number()
 		.nonnegative()
 		.parse(req.params.connectorId);
-	console.log("спарсился");
+	console.log("спарсился2");
 	const payment = await handleCb(req, connectorId);
 	console.log("cb обработался");
 	console.log("payment", payment);
