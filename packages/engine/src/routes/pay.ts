@@ -30,12 +30,16 @@ pay.post("/", auth, async (req, res) => {
 });
 
 pay.post("/callback/:connectorId", async (req, res) => {
+	console.log("прилетел лог коллбека");
+
 	const connectorId = z.coerce
 		.number()
 		.nonnegative()
 		.parse(req.params.connectorId);
-
+	console.log("спарсился");
 	const payment = await handleCb(req, connectorId);
+	console.log("cb обработался");
+	console.log("payment", payment);
 	if (payment) {
 		await fetch(
 			`http://localhost:${process.env.BOT_PORT}/notify/payment/${payment.id}`,
@@ -49,7 +53,6 @@ pay.post("/callback/:connectorId", async (req, res) => {
 			},
 		);
 	}
-
 	if (!payment) {
 		return res.json({ success: false, message: "Payment not found" });
 	}

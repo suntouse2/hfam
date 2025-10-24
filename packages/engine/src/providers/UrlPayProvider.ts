@@ -33,16 +33,22 @@ export class UrlPayProvider implements BaseProvider {
 		const auth = request.headers["authorization"];
 
 		if (!auth || !auth.startsWith("Bearer ")) {
+			console.log("Missing or invalid Authorization header");
+
 			throw ErrorAPI.badRequest("Missing or invalid Authorization header");
 		}
 		const token = auth.replace("Bearer ", "");
 		if (token !== api_key.value) {
+			console.log("Invalid api key");
+
 			throw ErrorAPI.badRequest("Invalid API key");
 		}
 
 		const data = callbackScheme.parse(request.body);
-		if (data.payment_status !== "success")
+		if (data.payment_status !== "success") {
+			console.log("Callback expected status=success");
 			throw ErrorAPI.badRequest("Callback expected status=success");
+		}
 
 		return {
 			paymentId: data.id.toString(),
