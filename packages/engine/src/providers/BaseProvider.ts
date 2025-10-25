@@ -22,6 +22,7 @@ export interface ProviderResponse {
 	paymentUrl?: string;
 	paymentQr?: string;
 	paymentId?: string;
+	callback?: string;
 	status?: PaymentStatus;
 }
 

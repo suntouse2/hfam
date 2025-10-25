@@ -11,7 +11,12 @@ import type {
 	ProviderResponse,
 } from "./BaseProvider";
 
-const ConnectorKeys = z.enum(["shop_id", "secret_key", "api_key"]);
+const ConnectorKeys = z.enum([
+	"shop_id",
+	"secret_key",
+	"api_key",
+	"success_callback",
+]);
 export const connectorScheme = z.record(
 	ConnectorKeys,
 	connectorCredentialSchema,
@@ -25,8 +30,13 @@ export const callbackScheme = z.object({
 });
 
 export class UrlPayProvider implements BaseProvider {
-	async callback({ request }: ProviderCallback): Promise<ProviderResponse> {
+	async callback({
+		request,
+		connector,
+	}: ProviderCallback): Promise<ProviderResponse> {
+		const { success_callback } = connectorScheme.parse(connector.schema);
 		const data = callbackScheme.parse(request.body);
+
 		if (data.payment_status !== "success") {
 			console.log("Callback expected status=success");
 			throw ErrorAPI.badRequest("Callback expected status=success");
@@ -35,6 +45,7 @@ export class UrlPayProvider implements BaseProvider {
 		return {
 			paymentId: data.id.toString(),
 			status: "PAID",
+			callback: success_callback.value,
 		};
 	}
 	async create(request: ProviderRequest): Promise<ProviderResponse> {

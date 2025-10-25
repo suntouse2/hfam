@@ -104,6 +104,7 @@ export const data: ProviderDTO[] = [
 			shop_id: { label: "ID Магазина" },
 			secret_key: { label: "Секретный ключ" },
 			api_key: { label: "API Ключ" },
+			success_callback: { label: "Каллбек оплаты" },
 		},
 	},
 ] as const;
