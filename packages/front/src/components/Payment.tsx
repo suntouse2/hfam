@@ -31,6 +31,10 @@ export default function Payment({
 				<span className="font-bold">{payment.projectId}</span>
 			</div>
 			<div className="flex items-center justify-between w-full">
+				<span className="font-medium">📦 Order ID</span>
+				<span className="font-bold">{payment.orderId}</span>
+			</div>
+			<div className="flex items-center justify-between w-full">
 				<span className="font-medium">🌐 Домен</span>
 				<span className="font-bold">{payment.domain}</span>
 			</div>

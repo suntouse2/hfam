@@ -30,6 +30,7 @@ export default async function Home({
 				description={description}
 				domain={domain}
 			/>
+
 			<PaymentForm
 				projectId={projectId}
 				orderId={orderId}
