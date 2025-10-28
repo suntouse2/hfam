@@ -17,7 +17,7 @@ pay.post("/", auth, async (req, res) => {
 pay.post("/callback/:connectorId", async (req, res) => {
 	const { token } = req.query;
 
-	if (token !== process.env.API_KEY) {
+	if (token !== process.env.CALLBACK_KEY) {
 		throw ErrorAPI.badRequest("No passed token in query");
 	}
 
