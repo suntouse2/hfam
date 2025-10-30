@@ -39,7 +39,7 @@ export default async function Home({
 				domain={domain}
 				methods={methods}
 			/>
-			<PaymentSupport tgSupportId={project.tgSupportId} />
+			<PaymentSupport supportLink={project.supportLink} />
 		</main>
 	);
 }

@@ -9,6 +9,7 @@ export type ProjectDTO = {
 	name: string;
 	id: number;
 	tgSupportId: string;
+	supportLink: string;
 	methods: MethodDTO[];
 };
 export type DomainDTO = {
