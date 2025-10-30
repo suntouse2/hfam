@@ -1,7 +1,4 @@
-import { DOMAIN } from "@hfam/shared";
-import { sample } from "@hfam/shared/helpers/sample";
 import { connectorCredentialSchema } from "@hfam/shared/validation/connectors";
-import got from "got";
 import z from "zod";
 import type {
 	BaseProvider,
@@ -28,10 +25,7 @@ export const callbackScheme = z.object({
 });
 
 export class TGProvider implements BaseProvider {
-	async callback({
-		request,
-		connector,
-	}: ProviderCallback): Promise<ProviderResponse> {
+	async callback(): Promise<ProviderResponse> {
 		return {};
 	}
 	async create(request: ProviderRequest): Promise<ProviderResponse> {

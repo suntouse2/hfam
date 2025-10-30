@@ -27,10 +27,7 @@ export const callbackScheme = z.object({
 });
 
 export class SBPNumberProvider implements BaseProvider {
-	async callback({
-		request,
-		connector,
-	}: ProviderCallback): Promise<ProviderResponse> {
+	async callback(): Promise<ProviderResponse> {
 		return {};
 	}
 	async create(request: ProviderRequest): Promise<ProviderResponse> {

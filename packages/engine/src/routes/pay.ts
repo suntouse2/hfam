@@ -18,29 +18,13 @@ pay.post("/callback/:connectorId", async (req, res) => {
 	const { token } = req.query;
 
 	if (token !== process.env.CALLBACK_KEY) {
-		throw ErrorAPI.badRequest("No passed token in query");
+		throw ErrorAPI.badRequest("No passed token in query or token invalid");
 	}
 
 	//biome-ignore format: no need
 	const connectorId = z.coerce.number().nonnegative().parse(req.params.connectorId);
 
-	const payment = await handleCb(req, connectorId);
+	await handleCb(req, connectorId);
 
-	if (payment) {
-		await fetch(
-			`http://localhost:${process.env.BOT_PORT}/notify/payment/${payment.id}`,
-			{
-				method: "POST",
-				body: JSON.stringify(payment),
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${process.env.API_KEY}`,
-				},
-			},
-		);
-	}
-	if (!payment) {
-		return res.json({ success: false, message: "Payment not found" });
-	}
-	res.json({ success: true, payment });
+	res.json({ success: true });
 });

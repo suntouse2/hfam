@@ -59,8 +59,6 @@ export class DonationsAlertsProvider implements BaseProvider {
 
 		const proxies = await this.getProxyList(proxies_url.value);
 
-		
-
 		let proxyAgent = this.getProxyAgent(
 			proxies[Math.floor(Math.random() * proxies.length)],
 		);

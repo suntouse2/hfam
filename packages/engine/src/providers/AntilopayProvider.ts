@@ -31,20 +31,13 @@ export class AntilopayProvider implements BaseProvider {
 		request,
 		connector,
 	}: ProviderCallback): Promise<ProviderResponse> {
-		console.log("пошла заявка");
-
 		const signature = request.header("X-Apay-Sign");
 		if (!signature) throw ErrorAPI.badRequest("Invalid signature");
-		console.log("сигнатура заявка");
 
 		const { callback_key } = connectorScheme.parse(connector.schema);
 
 		if (!callback_key.value)
 			throw ErrorAPI.badRequest("callback_key is required");
-
-		console.log("внатуре дашльше урл пошел");
-
-		console.log("проверка подписи");
 
 		const pubKey = crypto.createPublicKey({
 			key: Buffer.from(callback_key.value, "base64"),

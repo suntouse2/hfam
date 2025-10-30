@@ -21,18 +21,16 @@ export const callbackScheme = z.object({
 });
 
 export class TRCProvider implements BaseProvider {
-	async callback({
-		request,
-		connector,
-	}: ProviderCallback): Promise<ProviderResponse> {
+	async callback(): Promise<ProviderResponse> {
 		return {};
 	}
 	async create(request: ProviderRequest): Promise<ProviderResponse> {
 		const { connector, amount, description, orderId, domain, projectId } =
 			request;
+
 		const { trc_wallet } = connectorScheme.parse(connector.schema);
 
-		if (!trc_wallet.value) throw ErrorAPI.badRequest("Wallet is required");
+		if (!trc_wallet.value) throw ErrorAPI.badRequest("TRC-20 wallet missing");
 
 		const params = new URLSearchParams({
 			amount: String(amount),

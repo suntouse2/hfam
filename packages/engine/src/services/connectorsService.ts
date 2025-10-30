@@ -1,38 +1,37 @@
-import prisma from '@/prisma'
-import { z } from 'zod'
-import {
+import type { ConnectorDTO } from "@hfam/shared/dto/index";
+import { ErrorAPI } from "@hfam/shared/helpers/error";
+import type {
 	connectorBalancerFindSchema,
 	connectorCreateSchema,
 	connectorsFindSchema,
 	connectorUpdateSchema,
-} from '@hfam/shared/validation/connectors'
+} from "@hfam/shared/validation/connectors";
+import type { z } from "zod";
+import prisma from "@/prisma";
+import { providers } from "@/providers";
 
-import type { ConnectorDTO } from '@hfam/shared/dto/index'
-import { providers } from '@/providers'
-import { ErrorAPI } from '@hfam/shared/helpers/error'
-
-type ConnectorCreatePayload = z.infer<typeof connectorCreateSchema>
-type ConnectorsFindPayload = z.infer<typeof connectorsFindSchema>
-type ConnectorUpdatePayload = z.infer<typeof connectorUpdateSchema>
-type ConnectorBalancerFindPayload = z.infer<typeof connectorBalancerFindSchema>
+type ConnectorCreatePayload = z.infer<typeof connectorCreateSchema>;
+type ConnectorsFindPayload = z.infer<typeof connectorsFindSchema>;
+type ConnectorUpdatePayload = z.infer<typeof connectorUpdateSchema>;
+type ConnectorBalancerFindPayload = z.infer<typeof connectorBalancerFindSchema>;
 
 export const connectorService = {
 	async getConnectors(filters: ConnectorsFindPayload): Promise<ConnectorDTO[]> {
 		const connectors = await prisma.connector.findMany({
 			where: filters,
 			include: { project: true },
-		})
-		return connectors as ConnectorDTO[]
+		});
+		return connectors as ConnectorDTO[];
 	},
-	async getConnector(id: ConnectorDTO['id']): Promise<ConnectorDTO> {
+	async getConnector(id: ConnectorDTO["id"]): Promise<ConnectorDTO> {
 		const connector = await prisma.connector.findUniqueOrThrow({
 			where: { id },
 			include: { project: true },
-		})
-		return connector as ConnectorDTO
+		});
+		return connector as ConnectorDTO;
 	},
 	async createConnector(data: ConnectorCreatePayload): Promise<ConnectorDTO> {
-		const provider = providers.getProvider(data.byProvider)
+		const provider = providers.getProvider(data.byProvider);
 
 		const connector = await prisma.connector.create({
 			data: {
@@ -42,26 +41,26 @@ export const connectorService = {
 				schema: provider.schema,
 			},
 			include: { project: true },
-		})
-		return connector as ConnectorDTO
+		});
+		return connector as ConnectorDTO;
 	},
 	async updateConnector(
-		id: ConnectorDTO['id'],
-		data: ConnectorUpdatePayload
+		id: ConnectorDTO["id"],
+		data: ConnectorUpdatePayload,
 	): Promise<ConnectorDTO> {
 		const connector = await prisma.connector.update({
 			where: { id },
 			data,
 			include: { project: true },
-		})
-		return connector as ConnectorDTO
+		});
+		return connector as ConnectorDTO;
 	},
-	async deleteConnector(id: ConnectorDTO['id']): Promise<ConnectorDTO> {
+	async deleteConnector(id: ConnectorDTO["id"]): Promise<ConnectorDTO> {
 		const connector = await prisma.connector.delete({
 			where: { id },
 			include: { project: true },
-		})
-		return connector as ConnectorDTO
+		});
+		return connector as ConnectorDTO;
 	},
 	async balancer(filters: ConnectorBalancerFindPayload) {
 		const connectors = await prisma.connector.findMany({
@@ -71,23 +70,25 @@ export const connectorService = {
 				methods: { some: { method: filters.method } },
 				active: true,
 			},
-			orderBy: { bIndex: 'asc' },
+			orderBy: { bIndex: "asc" },
 			include: { project: true },
-		})
-		const filtered = connectors.filter(c => {
-			const provider = providers.getProvider(c.byProvider)
-			if (!provider.active) return false
-			return filters.method ? provider.methods.includes(filters.method) : true
-		})
+		});
+		const filtered = connectors.filter((c) => {
+			const provider = providers.getProvider(c.byProvider);
+			if (!provider.active) return false;
+			return filters.method ? provider.methods.includes(filters.method) : true;
+		});
 		if (!filtered.length)
-			throw ErrorAPI.badRequest('No available balanced connectors by this params')
+			throw ErrorAPI.badRequest(
+				"No available balanced connectors by this params",
+			);
 
-		const connector = filtered[0] as ConnectorDTO
+		const connector = filtered[0] as ConnectorDTO;
 
 		await prisma.connector.update({
 			where: { id: connector.id },
 			data: { bIndex: { increment: 1 } },
-		})
-		return connector
+		});
+		return connector;
 	},
-}
+};

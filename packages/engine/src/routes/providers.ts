@@ -1,17 +1,17 @@
-import { providers as p } from '@/providers'
-import { providersFindSchema } from '@hfam/shared/validation/provider'
-import { Router } from 'express'
-import z from 'zod'
+import { providersFindSchema } from "@hfam/shared/validation/provider";
+import { Router } from "express";
+import z from "zod";
+import { providers as p } from "@/providers";
 
-export const providers = Router()
+export const providers = Router();
 
-providers.get('/', async (req, res) => {
-	const filters = providersFindSchema.parse(req.query)
-	const providers = p.getProviders(filters)
-	res.json(providers)
-})
-providers.get('/:key', async (req, res) => {
-	const key = z.string().trim().max(64).parse(req.params.key)
-	const provider = p.getProvider(key)
-	res.json(provider)
-})
+providers.get("/", async (req, res) => {
+	const filters = providersFindSchema.parse(req.query);
+	const providers = p.getProviders(filters);
+	res.json(providers);
+});
+providers.get("/:key", async (req, res) => {
+	const key = z.string().trim().max(64).parse(req.params.key);
+	const provider = p.getProvider(key);
+	res.json(provider);
+});

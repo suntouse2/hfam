@@ -2,6 +2,7 @@ import { ErrorAPI } from "@hfam/shared/helpers/error";
 import type { NextFunction, Request, Response } from "express";
 
 export function auth(req: Request, _res: Response, next: NextFunction) {
+	// biome-ignore lint/complexity/useLiteralKeys: :>
 	const header = req.headers["authorization"];
 
 	if (!header) {
