@@ -21,7 +21,7 @@ export default async function SBP({
 	return (
 		<main className="mx-auto w-full max-w-[336px] py-6">
 			<PaymentTRC amount={amount} wallet={wallet} />
-			<PaymentSupport tgSupportId={project.tgSupportId} />
+			<PaymentSupport supportLink={project.supportLink} />
 		</main>
 	);
 }

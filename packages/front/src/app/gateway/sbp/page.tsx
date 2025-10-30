@@ -27,7 +27,7 @@ export default async function SBP({
 	return (
 		<main className="mx-auto w-full max-w-[336px] py-6">
 			<PaymentSbp amount={amount} number={number} owner={owner} bank={bank} />
-			<PaymentSupport tgSupportId={project.tgSupportId} />
+			<PaymentSupport supportLink={project.supportLink} />
 		</main>
 	);
 }
