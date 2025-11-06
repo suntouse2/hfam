@@ -39,16 +39,14 @@ export default async function Payments({
   const filters = await FiltersSchema.parseAsync(params);
   await checkApi();
 
-  const [payments, projects, domains, stats] = await Promise.all([
+  const [payments, projects, domains] = await Promise.all([
     paymentsApi.getPayments(filters, filters.page, filters.limit),
     projectsApi.getProjects(),
     domainsApi.getDomains(filters),
-    paymentsApi.getStats(),
   ]);
 
   return (
     <section className="p-4 mx-auto h-full  w-full max-w-[1500px]">
-      <PaymentsStats stats={stats} />
       <PaymentsList
         filters={filters}
         projects={projects}

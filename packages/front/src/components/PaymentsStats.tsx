@@ -35,10 +35,7 @@ export default function PaymentsStats({
     const paid = dayPayments.filter((p) => p.status === "PAID");
     const sum = paid.reduce((acc, p) => acc + p.amount, 0);
 
-    const weekday = date.toLocaleDateString("ru-RU", {
-      weekday: "long",
-    });
-
+    const weekday = date.toLocaleDateString("ru-RU", { weekday: "long" });
     const label =
       i === 0
         ? `Сегодня, ${weekday}`
@@ -54,12 +51,19 @@ export default function PaymentsStats({
       total: dayPayments.length,
       paid: paid.length,
       earned: sum,
+      date,
     };
   });
 
-  const avgTotal = days.reduce((acc, d) => acc + d.total, 0) / days.length || 0;
-  const avgPaid = days.reduce((acc, d) => acc + d.paid, 0) / days.length || 0;
-  const avgEarn = days.reduce((acc, d) => acc + d.earned, 0) / days.length || 0;
+  const avgTotal = +(
+    days.reduce((acc, d) => acc + d.total, 0) / days.length
+  ).toFixed(2);
+  const avgPaid = +(
+    days.reduce((acc, d) => acc + d.paid, 0) / days.length
+  ).toFixed(2);
+  const avgEarn = +(
+    days.reduce((acc, d) => acc + d.earned, 0) / days.length
+  ).toFixed(2);
 
   const report = days.reduce((acc, d) => {
     acc[d.label] = {
@@ -73,92 +77,109 @@ export default function PaymentsStats({
     return acc;
   }, {} as Record<string, any>);
 
-  console.log(report);
-
   return (
-    <div className="max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto mt-6">
-      {Object.entries(report).map(([day, d]) => (
-        <div
-          key={day}
-          className="rounded-2xl p-5 shadow-md border border-gray-200 bg-white hover:shadow-lg transition-shadow duration-200"
-        >
-          <h2 className="font-bold text-lg text-gray-800 mb-3 capitalize">
-            {day}
-          </h2>
+    <section className="max-w-[1200px] mx-auto mt-6">
+      {/* Карточки */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Object.entries(report).map(([day, d]) => (
+          <div
+            key={day}
+            className="rounded-2xl p-5 shadow-md border border-gray-200 bg-white hover:shadow-lg transition-shadow duration-200"
+          >
+            <h2 className="font-bold text-lg text-gray-800 mb-3 capitalize">
+              {day}
+            </h2>
 
-          {/* Транзакции */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-gray-700">
-              <CreditCard className="w-5 h-5 text-blue-500" />
-              <span className="text-sm font-medium">Транзакций</span>
+            {/* Транзакции */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2 text-gray-700">
+                <CreditCard className="w-5 h-5 text-blue-500" />
+                <span className="text-sm font-medium">Транзакций</span>
+              </div>
+              <div className="text-right">
+                <span className="text-base font-semibold text-gray-900">
+                  {d.total}
+                </span>{" "}
+                <span
+                  className={`text-sm font-semibold ${
+                    d.totalDiff > 0
+                      ? "text-green-600"
+                      : d.totalDiff < 0
+                      ? "text-red-600"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {d.totalDiff > 0 ? `+${d.totalDiff}` : d.totalDiff}
+                </span>
+              </div>
             </div>
-            <div className="text-right">
-              <span className="text-base font-semibold text-gray-900">
-                {d.total}
-              </span>{" "}
-              <span
-                className={`text-sm font-semibold ${
-                  d.totalDiff > 0
-                    ? "text-green-600"
-                    : d.totalDiff < 0
-                    ? "text-red-600"
-                    : "text-gray-400"
-                }`}
-              >
-                {d.totalDiff > 0 ? `+${d.totalDiff}` : d.totalDiff}
-              </span>
+
+            {/* Успешные */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2 text-gray-700">
+                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                <span className="text-sm font-medium">Успешных</span>
+              </div>
+              <div className="text-right">
+                <span className="text-base font-semibold text-gray-900">
+                  {d.paid}
+                </span>{" "}
+                <span
+                  className={`text-sm font-semibold ${
+                    d.paidDiff > 0
+                      ? "text-green-600"
+                      : d.paidDiff < 0
+                      ? "text-red-600"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {d.paidDiff > 0 ? `+${d.paidDiff}` : d.paidDiff}
+                </span>
+              </div>
+            </div>
+
+            {/* Заработано */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-gray-700">
+                <CircleDollarSign className="w-5 h-5 text-amber-500" />
+                <span className="text-sm font-medium">Заработано</span>
+              </div>
+              <div className="text-right">
+                <span className="text-base font-semibold text-gray-900">
+                  {d.earned.toLocaleString("ru-RU")} ₽
+                </span>{" "}
+                <span
+                  className={`text-sm font-semibold ${
+                    d.earnedDiff > 0
+                      ? "text-green-600"
+                      : d.earnedDiff < 0
+                      ? "text-red-600"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {d.earnedDiff > 0 ? `+${d.earnedDiff}` : d.earnedDiff} ₽
+                </span>
+              </div>
             </div>
           </div>
+        ))}
+      </div>
 
-          {/* Успешные */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-gray-700">
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
-              <span className="text-sm font-medium">Успешных</span>
-            </div>
-            <div className="text-right">
-              <span className="text-base font-semibold text-gray-900">
-                {d.paid}
-              </span>{" "}
-              <span
-                className={`text-sm font-semibold ${
-                  d.paidDiff > 0
-                    ? "text-green-600"
-                    : d.paidDiff < 0
-                    ? "text-red-600"
-                    : "text-gray-400"
-                }`}
-              >
-                {d.paidDiff > 0 ? `+${d.paidDiff}` : d.paidDiff}
-              </span>
-            </div>
-          </div>
-
-          {/* Заработано */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gray-700">
-              <CircleDollarSign className="w-5 h-5 text-amber-500" />
-              <span className="text-sm font-medium">Заработано</span>
-            </div>
-            <div className="text-right">
-              <span className="text-base font-semibold text-gray-900">
-                {d.earned.toLocaleString("ru-RU")} ₽
-              </span>{" "}
-              <span
-                className={`text-sm font-semibold ${
-                  d.earnedDiff > 0
-                    ? "text-green-600"
-                    : d.earnedDiff < 0
-                    ? "text-red-600"
-                    : "text-gray-400"
-                }`}
-              >
-                {d.earnedDiff > 0 ? `+${d.earnedDiff}` : d.earnedDiff} ₽
-              </span>
-            </div>
-          </div>
+      {/* Плашка средних */}
+      <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800 shadow-sm text-sm flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <span className="font-medium text-gray-600">Средние за неделю:</span>
+        <div className="mt-2 sm:mt-0 space-x-6">
+          <span className="font-semibold text-gray-900">
+            Транзакций {avgTotal}
+          </span>
+          <span className="font-semibold text-gray-900">
+            Успешных {avgPaid}
+          </span>
+          <span className="font-semibold text-gray-900">
+            Заработок {avgEarn.toLocaleString("ru-RU")} ₽
+          </span>
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
 }
