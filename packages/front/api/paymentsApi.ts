@@ -16,7 +16,16 @@ export const paymentsApi = {
 			.get("payments", { searchParams })
 			.json<PaginationDTO<PaymentDTO>>();
 	},
+
 	async getPayment(id: PaymentDTO["id"]) {
 		return api.get(`payments/${id}`).json<PaymentDTO>();
+	},
+
+	async getStats() {
+		return api.get("payments/stats/week").json<{
+			count: number;
+			totalAmount: number;
+			data: PaymentDTO[];
+		}>();
 	},
 };

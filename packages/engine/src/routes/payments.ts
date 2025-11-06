@@ -18,3 +18,7 @@ payments.get("/:id", async (req, res) => {
 	const payment = await paymentsService.getPayment(id);
 	res.json(payment);
 });
+payments.get("/stats/week", async (req, res) => {
+	const stats = await paymentsService.getStats();
+	res.json(stats);
+});

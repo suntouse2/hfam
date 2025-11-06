@@ -1,11 +1,7 @@
 import z from "zod";
 import checkApi from "@/actions/checkApi";
-import PaymentsList from "@/components/PaymentsList";
-import { domainsApi } from "../../../api/domainsApi";
-import { paymentsApi } from "../../../api/paymentsApi";
-import { projectsApi } from "../../../api/projectsApi";
-import "../tables.css";
 import PaymentsStats from "@/components/PaymentsStats";
+import { paymentsApi } from "../../../../api/paymentsApi";
 
 const FiltersSchema = z.object({
   api_key: z.string().optional(),
@@ -30,31 +26,14 @@ const FiltersSchema = z.object({
 export type FiltersSchemaType = z.infer<typeof FiltersSchema>;
 
 //biome-ignore format: no need to format
-export default async function Payments({
-  searchParams,
-}: {
-  searchParams: Promise<FiltersSchemaType>;
-}) {
-  const params = await searchParams;
-  const filters = await FiltersSchema.parseAsync(params);
+export default async function Payments() {
   await checkApi();
 
-  const [payments, projects, domains, stats] = await Promise.all([
-    paymentsApi.getPayments(filters, filters.page, filters.limit),
-    projectsApi.getProjects(),
-    domainsApi.getDomains(filters),
-    paymentsApi.getStats(),
-  ]);
+  const stats = await paymentsApi.getStats();
 
   return (
     <section className="p-4 mx-auto h-full  w-full max-w-[1500px]">
       <PaymentsStats stats={stats} />
-      <PaymentsList
-        filters={filters}
-        projects={projects}
-        payments={payments}
-        domains={domains}
-      />
     </section>
   );
 }

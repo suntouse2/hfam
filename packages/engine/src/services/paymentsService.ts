@@ -38,6 +38,29 @@ export const paymentsService = {
 		const payment = await prisma.payment.findUnique({ where: { id } });
 		return payment as PaymentDTO;
 	},
+	async getStats(): Promise<{
+		count: number;
+		totalAmount: number;
+		data: PaymentDTO[];
+	}> {
+		const now = new Date();
+		const weekAgo = new Date();
+		weekAgo.setDate(now.getDate() - 7);
+
+		const payments = await prisma.payment.findMany({
+			where: { createdAt: { gte: weekAgo } },
+			orderBy: { createdAt: "desc" },
+		});
+
+		const count = payments.length;
+		const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
+
+		return {
+			count,
+			totalAmount,
+			data: payments as PaymentDTO[],
+		};
+	},
 	async getPayments(
 		filters?: PaymentFindPayload,
 		page: number = 1,

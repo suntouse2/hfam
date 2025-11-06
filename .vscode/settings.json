@@ -1,29 +1,29 @@
 {
-	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": {
-		"source.fixAll.biome": "explicit"
-	},
-	"editor.defaultFormatter": "biomejs.biome",
-	"[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
-	"[typescriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
-	"[javascript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"cSpell.words": [
-		"adddocs",
-		"arrowdown",
-		"CHEATSDB",
-		"ezod",
-		"fakerjs",
-		"fapi",
-		"hfam",
-		"hpagent",
-		"managment",
-		"murad",
-		"pkce",
-		"Smgl",
-		"svgs",
-		"tldts",
-		"turbopack"
-	]
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cSpell.words": [
+    "adddocs",
+    "arrowdown",
+    "CHEATSDB",
+    "ezod",
+    "fakerjs",
+    "fapi",
+    "hfam",
+    "hpagent",
+    "managment",
+    "murad",
+    "pkce",
+    "Smgl",
+    "svgs",
+    "tldts",
+    "turbopack"
+  ]
 }
