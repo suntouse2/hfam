@@ -1,5 +1,10 @@
 "use client";
-import { CheckCircle2, CircleDollarSign, CreditCard } from "lucide-react";
+import {
+  CheckCircle2,
+  CircleDollarSign,
+  CreditCard,
+  Wallet,
+} from "lucide-react";
 
 type PaymentDTO = {
   id: string;
@@ -38,6 +43,7 @@ export default function PaymentsStats({
     );
     const paid = dayPayments.filter((p) => p.status === "PAID");
     const sum = paid.reduce((acc, p) => acc + p.amount, 0);
+    const net = +(sum * 0.925).toFixed(2); // чистыми минус 7.5%
 
     const weekday = start.toLocaleDateString("ru-RU", {
       weekday: "long",
@@ -59,6 +65,7 @@ export default function PaymentsStats({
       total: dayPayments.length,
       paid: paid.length,
       earned: sum,
+      net,
       date: start,
     };
   });
@@ -71,6 +78,7 @@ export default function PaymentsStats({
   const avgTotal = avg("total");
   const avgPaid = avg("paid");
   const avgEarn = avg("earned");
+  const avgNet = avg("net");
 
   const report = days.reduce((acc, d) => {
     acc[d.label] = {
@@ -80,6 +88,8 @@ export default function PaymentsStats({
       paidDiff: +(d.paid - avgPaid).toFixed(2),
       earned: d.earned,
       earnedDiff: +(d.earned - avgEarn).toFixed(2),
+      net: d.net,
+      netDiff: +(d.net - avgNet).toFixed(2),
     };
     return acc;
   }, {} as Record<string, any>);
@@ -97,6 +107,7 @@ export default function PaymentsStats({
               {day}
             </h2>
 
+            {/* Транзакции */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 text-gray-700">
                 <CreditCard className="w-5 h-5 text-blue-500" />
@@ -120,6 +131,7 @@ export default function PaymentsStats({
               </div>
             </div>
 
+            {/* Успешные */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 text-gray-700">
                 <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -143,7 +155,8 @@ export default function PaymentsStats({
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            {/* Заработано */}
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 text-gray-700">
                 <CircleDollarSign className="w-5 h-5 text-amber-500" />
                 <span className="text-sm font-medium">Заработано</span>
@@ -165,6 +178,30 @@ export default function PaymentsStats({
                 </span>
               </div>
             </div>
+
+            {/* Чистыми */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-gray-700">
+                <Wallet className="w-5 h-5 text-purple-500" />
+                <span className="text-sm font-medium">Чистыми</span>
+              </div>
+              <div className="text-right">
+                <span className="text-base font-semibold text-gray-900">
+                  {d.net.toLocaleString("ru-RU")} ₽
+                </span>{" "}
+                <span
+                  className={`text-sm font-semibold ${
+                    d.netDiff > 0
+                      ? "text-green-600"
+                      : d.netDiff < 0
+                      ? "text-red-600"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {d.netDiff > 0 ? `+${d.netDiff}` : d.netDiff} ₽
+                </span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -181,6 +218,9 @@ export default function PaymentsStats({
           </span>
           <span className="font-semibold text-gray-900">
             Заработок {avgEarn.toLocaleString("ru-RU")} ₽
+          </span>
+          <span className="font-semibold text-gray-900">
+            Чистыми {avgNet.toLocaleString("ru-RU")} ₽
           </span>
         </div>
       </div>
