@@ -18,16 +18,20 @@ export default function PaymentsStats({
     createdAt: new Date(p.createdAt),
   }));
 
-  const today = new Date();
-  const startOfToday = new Date(today);
-  startOfToday.setHours(0, 0, 0, 0);
+  const todayUTC = new Date();
+  const startOfTodayUTC = new Date(
+    Date.UTC(
+      todayUTC.getUTCFullYear(),
+      todayUTC.getUTCMonth(),
+      todayUTC.getUTCDate()
+    )
+  );
 
   const days = Array.from({ length: 7 }).map((_, i) => {
-    const date = new Date(startOfToday);
-    date.setDate(date.getDate() - i);
-    const start = new Date(date);
-    const end = new Date(date);
-    end.setDate(end.getDate() + 1);
+    const start = new Date(startOfTodayUTC);
+    start.setUTCDate(start.getUTCDate() - i);
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 1);
 
     const dayPayments = data.filter(
       (p) => p.createdAt >= start && p.createdAt < end
@@ -35,15 +39,19 @@ export default function PaymentsStats({
     const paid = dayPayments.filter((p) => p.status === "PAID");
     const sum = paid.reduce((acc, p) => acc + p.amount, 0);
 
-    const weekday = date.toLocaleDateString("ru-RU", { weekday: "long" });
+    const weekday = start.toLocaleDateString("ru-RU", {
+      weekday: "long",
+      timeZone: "UTC",
+    });
     const label =
       i === 0
         ? `Сегодня, ${weekday}`
         : i === 1
         ? `Вчера, ${weekday}`
-        : `${date.toLocaleDateString("ru-RU", {
+        : `${start.toLocaleDateString("ru-RU", {
             day: "2-digit",
             month: "2-digit",
+            timeZone: "UTC",
           })} ${weekday}`;
 
     return {
@@ -51,19 +59,18 @@ export default function PaymentsStats({
       total: dayPayments.length,
       paid: paid.length,
       earned: sum,
-      date,
+      date: start,
     };
   });
 
-  const avgTotal = +(
-    days.reduce((acc, d) => acc + d.total, 0) / days.length
-  ).toFixed(2);
-  const avgPaid = +(
-    days.reduce((acc, d) => acc + d.paid, 0) / days.length
-  ).toFixed(2);
-  const avgEarn = +(
-    days.reduce((acc, d) => acc + d.earned, 0) / days.length
-  ).toFixed(2);
+  const avg = (key: keyof (typeof days)[number]) =>
+    +(
+      days.reduce((acc, d) => acc + (d[key] as number), 0) / days.length
+    ).toFixed(2);
+
+  const avgTotal = avg("total");
+  const avgPaid = avg("paid");
+  const avgEarn = avg("earned");
 
   const report = days.reduce((acc, d) => {
     acc[d.label] = {
@@ -90,7 +97,6 @@ export default function PaymentsStats({
               {day}
             </h2>
 
-            {/* Транзакции */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 text-gray-700">
                 <CreditCard className="w-5 h-5 text-blue-500" />
@@ -114,7 +120,6 @@ export default function PaymentsStats({
               </div>
             </div>
 
-            {/* Успешные */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 text-gray-700">
                 <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -138,7 +143,6 @@ export default function PaymentsStats({
               </div>
             </div>
 
-            {/* Заработано */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-gray-700">
                 <CircleDollarSign className="w-5 h-5 text-amber-500" />
