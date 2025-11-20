@@ -174,6 +174,7 @@ export default function PaymentsList({
             <th className="border p-2">💰 Сумма</th>
             <th className="border p-2">🌐 Домен</th>
             <th className="border p-2">🕒 Создан</th>
+            <th className="border p-2">🕒 Обновлен</th>
             <th className="border p-2">📝 Описание</th>
           </tr>
         </thead>
@@ -202,6 +203,12 @@ export default function PaymentsList({
               <td className="border p-2">{p.domain}</td>
               <td className="border p-2">
                 {new Date(p.createdAt)
+                  .toISOString()
+                  .replace("T", " ")
+                  .slice(0, 19)}
+              </td>
+              <td className="border p-2">
+                {new Date(p.updatedAt)
                   .toISOString()
                   .replace("T", " ")
                   .slice(0, 19)}
