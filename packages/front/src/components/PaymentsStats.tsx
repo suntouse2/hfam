@@ -14,16 +14,24 @@ type PaymentDTO = {
   createdAt: string | Date;
 };
 
-const MSK_OFFSET = 3 * 60 * 60 * 1000;
+// ---- ВРЕМЯ ПО МОСКВЕ ----
+function toMSK(date: Date): Date {
+  return new Date(date.toLocaleString("en-US", { timeZone: "Europe/Moscow" }));
+}
 
-const toMSK = (date: Date) => new Date(date.getTime() + MSK_OFFSET);
+function startOfMSKDay(date: Date): Date {
+  const fmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Moscow",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
-const startOfMSKDay = (d: Date) => {
-  const m = toMSK(d);
-  return new Date(
-    Date.UTC(m.getUTCFullYear(), m.getUTCMonth(), m.getUTCDate())
-  );
-};
+  // "2025-11-24"
+  const [y, m, d] = fmt.format(date).split("-");
+  return new Date(`${y}-${m}-${d}T00:00:00+03:00`);
+}
+// --------------------------
 
 export default function PaymentsStats({
   stats,
@@ -45,14 +53,14 @@ export default function PaymentsStats({
     }));
 
     const nowMSK = toMSK(new Date());
-    const startTodayMSK = startOfMSKDay(nowMSK);
+    const todayStart = startOfMSKDay(nowMSK);
 
     const days = Array.from({ length: 7 }).map((_, i) => {
-      const start = new Date(startTodayMSK);
-      start.setUTCDate(start.getUTCDate() - i);
+      const start = new Date(todayStart);
+      start.setDate(start.getDate() - i);
 
       const end = new Date(start);
-      end.setUTCDate(end.getUTCDate() + 1);
+      end.setDate(end.getDate() + 1);
 
       const dayPayments = data.filter((p) => {
         const dt = toMSK(p.createdAt);
@@ -60,12 +68,12 @@ export default function PaymentsStats({
       });
 
       const paid = dayPayments.filter((p) => p.status === "PAID");
-      const sum = paid.reduce((acc, p) => acc + p.amount, 0);
-      const net = +(sum * 0.925).toFixed(2);
+      const earned = paid.reduce((acc, p) => acc + p.amount, 0);
+      const net = +(earned * 0.925).toFixed(2);
 
       const weekday = start.toLocaleDateString("ru-RU", {
         weekday: "long",
-        timeZone: "UTC",
+        timeZone: "Europe/Moscow",
       });
 
       const label =
@@ -76,14 +84,14 @@ export default function PaymentsStats({
           : `${start.toLocaleDateString("ru-RU", {
               day: "2-digit",
               month: "2-digit",
-              timeZone: "UTC",
+              timeZone: "Europe/Moscow",
             })} ${weekday}`;
 
       return {
         label,
         total: dayPayments.length,
         paid: paid.length,
-        earned: sum,
+        earned,
         net,
       };
     });
@@ -93,30 +101,31 @@ export default function PaymentsStats({
         days.reduce((acc, d) => acc + (d[key] as number), 0) / days.length
       ).toFixed(2);
 
-    const avgTotal = avg("total");
-    const avgPaid = avg("paid");
-    const avgEarn = avg("earned");
-    const avgNet = avg("net");
+    const averages = {
+      avgTotal: avg("total"),
+      avgPaid: avg("paid"),
+      avgEarn: avg("earned"),
+      avgNet: avg("net"),
+    };
 
     const rep = days.reduce((acc, d) => {
       acc[d.label] = {
         total: d.total,
-        totalDiff: +(d.total - avgTotal).toFixed(2),
+        totalDiff: +(d.total - averages.avgTotal).toFixed(2),
         paid: d.paid,
-        paidDiff: +(d.paid - avgPaid).toFixed(2),
+        paidDiff: +(d.paid - averages.avgPaid).toFixed(2),
         earned: d.earned,
-        earnedDiff: +(d.earned - avgEarn).toFixed(2),
+        earnedDiff: +(d.earned - averages.avgEarn).toFixed(2),
         net: d.net,
-        netDiff: +(d.net - avgNet).toFixed(2),
+        netDiff: +(d.net - averages.avgNet).toFixed(2),
       };
       return acc;
     }, {} as Record<string, any>);
 
     setReport(rep);
-    setAverages({ avgTotal, avgPaid, avgEarn, avgNet });
+    setAverages(averages);
   }, [stats]);
 
-  // Пока не смонтировано → ничего не показываем
   if (!report || !averages) return null;
 
   const { avgTotal, avgPaid, avgEarn, avgNet } = averages;
@@ -165,41 +174,11 @@ export default function PaymentsStats({
           </div>
         ))}
       </div>
-
-      <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800 shadow-sm text-sm flex flex-col sm:flex-row justify-between items-start sm:items-center">
-        <span className="font-medium text-gray-600">Средние за неделю:</span>
-        <div className="mt-2 sm:mt-0 space-x-6">
-          <span className="font-semibold text-gray-900">
-            Транзакций {avgTotal}
-          </span>
-          <span className="font-semibold text-gray-900">
-            Успешных {avgPaid}
-          </span>
-          <span className="font-semibold text-gray-900">
-            Заработок {avgEarn.toLocaleString("ru-RU")} ₽
-          </span>
-          <span className="font-semibold text-gray-900">
-            Чистыми {avgNet.toLocaleString("ru-RU")} ₽
-          </span>
-        </div>
-      </div>
     </section>
   );
 }
 
-function StatRow({
-  icon,
-  label,
-  value,
-  diff,
-  diffNum,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: any;
-  diff: any;
-  diffNum?: number;
-}) {
+function StatRow({ icon, label, value, diff, diffNum }: any) {
   const num = diffNum ?? parseFloat(diff);
   return (
     <div className="flex items-center justify-between mb-2">
